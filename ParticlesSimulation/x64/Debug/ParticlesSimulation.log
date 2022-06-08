@@ -1,0 +1,10 @@
+﻿  particles.cpp
+  particleSystem.cpp
+  render_particles.cpp
+C:\cours\M1\ProjetM1\m1_adl_projet_fougeret_sochaj_maurel\particlesSystem\ParticlesSimulation\render_particles.cpp(213,64): warning C4267: 'argument' : conversion de 'size_t' en 'GLint', perte possible de données
+  shaders.cpp
+LINK : warning LNK4075: ' /INCREMENTAL' ignoré à cause de la spécification '/LTCG'
+  Génération de code en cours
+  Not all modules are compiled with -Gy (function comdat), build without incremental LTCG.
+  Fin de la génération du code
+  ParticlesSimulation.vcxproj -> C:\cours\M1\ProjetM1\m1_adl_projet_fougeret_sochaj_maurel\particlesSystem\x64\Debug\ParticlesSimulation.exe
