@@ -19,6 +19,7 @@
 #include "particles_kernel.cuh"
 #include "vector_functions.h"
 #include "render_particles.h"
+#include "render_mesh.h"
  // Particle system class
 class ParticleSystem
 {
@@ -38,6 +39,7 @@ public:
     {
         POSITION,
         VELOCITY,
+        TRIANGLES,
     };
 
     void update(float deltaTime);
@@ -54,6 +56,10 @@ public:
     unsigned int getCurrentReadBuffer() const
     {
         return m_posVbo;
+    }
+    unsigned int getCurrentReadBufferTriangle() const
+    {
+        return m_triangleVBO;
     }
     unsigned int getColorBuffer()       const
     {
@@ -88,6 +94,9 @@ public:
     void dumpParticles(uint start, uint count);
     void setRenderer(ParticleRenderer* myRenderer) {
         this->myRenderer = myRenderer;
+    }
+    void setMeshRenderer(MeshRenderer* myRenderer) {
+        this->meshRenderer = myRenderer;
     }
     void setIterations(int i)
     {
@@ -141,14 +150,15 @@ public:
         m_params.p1 = p1;
         m_params.p2 = p2;
         m_params.p3 = p3;
+       
     }
     void addAllTriangles(int nbTriangles, float3* triangles) {
         m_params.nbTrianglesPoints = nbTriangles;
-        m_params.trianglesPoints = (float3 *) malloc(3 * sizeof(float3) * nbTriangles);
-        for (int i = 0; i < nbTriangles * 3; i++) {
-            printf("%d", i);
-            m_params.trianglesPoints[i] = triangles[i];
-        }
+        int nbTriangle=nbTriangles;
+        cudaMalloc((void**)&nbTriangle, sizeof(int));
+
+        cudaMemcpyToSymbol("nbT", &nbTriangle, sizeof(int), 0, cudaMemcpyHostToDevice);
+       
     }
     float3* getTrianglesPoints() {
         return m_params.trianglesPoints;
@@ -216,7 +226,7 @@ protected: // data
     // CPU data
     float* m_hPos;              // particle positions
     float* m_hVel;              // particle velocities
-
+    float* m_hTriangle;
     uint* m_hParticleHash;
     uint* m_hCellStart;
     uint* m_hCellEnd;
@@ -224,6 +234,7 @@ protected: // data
     // GPU data
     float* m_dPos;
     float* m_dVel;
+    float* m_dTriangle;
 
     float* m_dSortedPos;
     float* m_dSortedVel;
@@ -240,12 +251,15 @@ protected: // data
 
     uint   m_posVbo;            // vertex buffer object for particle positions
     uint   m_colorVBO;          // vertex buffer object for colors
+    uint m_triangleVBO;
 
     float* m_cudaPosVBO;        // these are the CUDA deviceMem Pos
     float* m_cudaColorVBO;      // these are the CUDA deviceMem Color
+    float* m_cudaTriangleVBO;
 
     struct cudaGraphicsResource* m_cuda_posvbo_resource; // handles OpenGL-CUDA exchange
     struct cudaGraphicsResource* m_cuda_colorvbo_resource; // handles OpenGL-CUDA exchange
+    struct cudaGraphicsResource* m_cuda_trianglevbo_resource; // handles OpenGL-CUDA exchange
 
     // params
     SimParams m_params;
@@ -257,6 +271,7 @@ protected: // data
     uint m_solverIterations;
 
     ParticleRenderer* myRenderer;
+    MeshRenderer* meshRenderer;
     int idScreenshot = 0;
     bool takeScreen = false;
 };

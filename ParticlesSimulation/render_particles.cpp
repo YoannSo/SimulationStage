@@ -60,6 +60,8 @@ void ParticleRenderer::_drawPoints()
 {
     if (!m_vbo)
     {
+        printf("5\n");
+
         glBegin(GL_POINTS);
         {
             int k = 0;
@@ -86,7 +88,7 @@ void ParticleRenderer::_drawPoints()
             glEnableClientState(GL_COLOR_ARRAY);
         }
 
-        glDrawArrays(GL_POINTS, 0, m_numParticles);
+        glDrawArrays(GL_TRIANGLES, 0, m_numParticles);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDisableClientState(GL_VERTEX_ARRAY);
@@ -162,7 +164,6 @@ void ParticleRenderer::display(DisplayMode mode)
         glUniform1f(glGetUniformLocation(m_program, "pointRadius"), m_particleRadius);
 
         glUniform1f(glGetUniformLocation(m_program, "colorMode"), m_color_mode);
-
         glColor3f(1, 1, 1);
         _drawPoints();
 

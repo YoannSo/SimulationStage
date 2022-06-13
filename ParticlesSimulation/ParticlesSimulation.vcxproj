@@ -166,6 +166,7 @@
   <ItemGroup>
     <ClCompile Include="particles.cpp" />
     <ClCompile Include="particleSystem.cpp" />
+    <ClCompile Include="render_mesh.cpp" />
     <ClCompile Include="render_particles.cpp" />
     <ClCompile Include="shaders.cpp" />
   </ItemGroup>
@@ -182,6 +183,7 @@
     <ClInclude Include="param.h" />
     <ClInclude Include="paramgl.h" />
     <ClInclude Include="particleSystem.h" />
+    <ClInclude Include="render_mesh.h" />
     <ClInclude Include="shaders.h" />
     <ClInclude Include="render_particles.h" />
   </ItemGroup>

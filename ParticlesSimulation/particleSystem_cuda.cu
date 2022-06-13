@@ -119,8 +119,18 @@ extern "C"
     {
         // copy parameters to constant memory
         checkCudaErrors(cudaMemcpyToSymbol(params, hostParams, sizeof(SimParams)));
+        
+            
     }
+    void setTriangles(int _nbTriangles, float3* _trianglesPoints) {
 
+        checkCudaErrors(cudaMemcpyToSymbol(nbTriangles, &_nbTriangles, sizeof(int)));
+        /*float3** adrr;
+        checkCudaErrors(cudaGetSymbolAddress((void**)&adrr, trianglesPoints));
+        checkCudaErrors (cudaMalloc(adrr, sizeof(float3) * 2));
+        checkCudaErrors(cudaMemcpyToSymbol(trianglesPoints, _trianglesPoints, 2*sizeof(float3)));
+    */
+    }
     //Round a / b to nearest higher integer value
     uint iDivUp(uint a, uint b)
     {

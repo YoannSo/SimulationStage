@@ -27,6 +27,7 @@ extern "C"
 
 
     void setParameters(SimParams* hostParams);
+    void setTriangles(int nbTriangles, float3* trianglesPoints);
 
     void integrateSystem(float* pos,
         float* vel,
