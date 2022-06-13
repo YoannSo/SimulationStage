@@ -28,15 +28,13 @@ namespace cg = cooperative_groups;
 // simulation parameters in constant memory
 __constant__ SimParams params;
 
-__device__ float3* trianglesPoints;
-__constant__ int nbTriangles;
 
 struct integrate_functor
 {
     float deltaTime;
-
+    float* triangles;
     __host__ __device__
-        integrate_functor(float delta_time) : deltaTime(delta_time) {}
+        integrate_functor(float delta_time,float* p_triangles) : deltaTime(delta_time), triangles(p_triangles) {}
 
     template <typename Tuple>
     __device__
@@ -46,55 +44,61 @@ struct integrate_functor
         volatile float4 velData = thrust::get<1>(t);
         float3 pos = make_float3(posData.x, posData.y, posData.z);
         float3 vel = make_float3(velData.x, velData.y, velData.z);
+        float3 allTriangles[4];
 
-        
+        allTriangles[0].x = triangles[0];
+        allTriangles[0].y = triangles[1];
+        allTriangles[0].z = triangles[2];
+
+        allTriangles[1].x = triangles[4];
+        allTriangles[1].y = triangles[5];
+        allTriangles[1].z = triangles[6];
+
+        allTriangles[2].x = triangles[8];
+        allTriangles[2].y = triangles[9];
+        allTriangles[2].z = triangles[10];
+
+
+
+        allTriangles[3].x = triangles[20];
+        allTriangles[3].y = triangles[21];
+        allTriangles[3].z = triangles[22];
+
+
+
+        //printf("%f\n", triangles[3]);
        vel += params.gravity * deltaTime;
         vel *= params.globalDamping;
+        
         // new position = old position + velocity * deltaTime
-          /* for (int i = 0; i < params.nbTrianglesPoints; i++) {
-                //float triangleCollider = collideTriangle(test1, test, params.trianglesPoints[i], params.trianglesPoints[i + 1], params.trianglesPoints[i + 2]);
-                if (1 != 0) {
+            for (int i = 0; i < params.nbTrianglesPoints; i++) {
+                float triangleCollider = collideTriangle(pos, vel, params.trianglesPoints[i], params.trianglesPoints[i + 1], params.trianglesPoints[i + 2]);
+                if (triangleCollider != 0) {
+                    float3 pointInTriangle = pos + vel * triangleCollider;
                     float3 v0v1 = params.trianglesPoints[i + 1] - params.trianglesPoints[i];
                     float3 v0v2 = params.trianglesPoints[i + 2] - params.trianglesPoints[i];
                     // no need to normalize
                     float3 N = -cross(v0v1, v0v2);  //N 
-                    pos += 1.f;
+                   //ici pos = pointInTriangle + params.particleRadius * N;
 
-                    float3 reflectDir = test - 2.f * dot(N, vel) * N;
+                    /*float3 reflectDir = vel - 2.f * dot(N, vel) * N;
 
-                    test *= params.boundaryDamping;
-                    test = make_float3(0.f);
+                    vel *= params.boundaryDamping;
+                    vel = make_float3(0.f);
 
-                    test += 0.1f * reflectDir;
-                    break;
+                    vel += 0.1f * reflectDir;*/
                 }
                 i += 2;
-            }*/
-       // printf("cuda: %d %f\n", nbTriangles,trianglesPoints[1].x);
+            }
         
-        float triangleCollider = collideTriangle(pos, vel, params.p0, params.p1, params.p2);
+       
+        float triangleCollider = collideTriangle(pos, vel,allTriangles[0], allTriangles[1], allTriangles[2]);
         if (triangleCollider != 0) {
             float3 pointInTriangle = pos + vel * triangleCollider;
-            float3 v0v1 = params.p1 - params.p0;
-            float3 v0v2 = params.p2 - params.p0;
+            float3 v0v1 = allTriangles[1] - allTriangles[0];
+            float3 v0v2 = allTriangles[2] - allTriangles[0];
             // no need to normalize
             float3 N = -cross(v0v1, v0v2);  //N 
-            pos = pointInTriangle + params.particleRadius * N * 1.2f;
-
-            float3 reflectDir = vel - 2.f * dot(N, vel) * N;
-
-            vel *= params.boundaryDamping;
-            vel = make_float3(0.f);
-
-            vel += 0.1f * reflectDir;
-        }
-        triangleCollider = collideTriangle(pos, vel, params.p0, params.p3, params.p1);
-        if (triangleCollider != 0) {
-            float3 pointInTriangle = pos + vel * triangleCollider;
-            float3 v0v1 = params.p3 - params.p0;
-            float3 v0v2 = params.p1 - params.p0;
-            // no need to normalize
-            float3 N = -cross(v0v1, v0v2);  //N
             pos = pointInTriangle + params.particleRadius * N;
 
             float3 reflectDir = vel - 2.f * dot(N, vel) * N;
@@ -104,6 +108,23 @@ struct integrate_functor
 
             vel += 0.1f * reflectDir;
         }
+         triangleCollider = collideTriangle(pos, vel,allTriangles[0], allTriangles[3], allTriangles[1]);
+        if (triangleCollider != 0) {
+            float3 pointInTriangle = pos + vel * triangleCollider;
+            float3 v0v1 = allTriangles[3] - allTriangles[0];
+            float3 v0v2 = allTriangles[1] - allTriangles[0];
+            // no need to normalize
+            float3 N = -cross(v0v1, v0v2);  //N 
+            pos = pointInTriangle + params.particleRadius* N;
+
+            float3 reflectDir = vel - 2.f * dot(N, vel) * N;
+
+            vel *= params.boundaryDamping;
+            vel = make_float3(0.f);
+           
+            vel += 0.1f*reflectDir;
+        }
+
         pos += vel * deltaTime;
 
         float sizeCubex = params.sizeCubeX;
@@ -314,12 +335,22 @@ float3 collideSpheres(float3 posA, float3 posB,
 __device__
 float collideTriangle(float3 pos, float3 vel,float3 p0,float3 p1,float3 p2)
 {
-    float EPSILON = 0.00001f;
-    vel = normalize(vel);
+    float EPSILON = 0.0001f;
    /* float3 newPoint = pos + vel;
     float3 dir =normalize(vel);
 
-   
+    float3 edge1 = params.p1 - params.p0;
+    float3 edge2 = params.p2 - params.p0;
+    float3 pvec = cross(dir, edge2);
+    float det = dot(edge1, pvec);
+    if (det > -EPSILON && det < EPSILON) return make_float3(0.f);
+    float inv_det = 1.f / det;
+    float3 tvec = pos - params.p0;
+    float3 qvec = cross(tvec, edge1);
+
+    float u = dot(tvec, pvec) * inv_det;
+    if(u<0.f||u>1.f)return make_float3(0.f);
+    float t = inv_det * dot(edge2, qvec);
     if (t > EPSILON) {
         if(t<0.3f)
         return make_float3(0.f,0.2f,0.f);
@@ -330,7 +361,6 @@ float collideTriangle(float3 pos, float3 vel,float3 p0,float3 p1,float3 p2)
     float3 v0v2 = p2 - p0;
     // no need to normalize
     float3 N = cross(v0v1,v0v2);  //N 
-    N = normalize(N);
     float area2 =length(N);
 
     // Step 1: finding P
@@ -347,7 +377,7 @@ float collideTriangle(float3 pos, float3 vel,float3 p0,float3 p1,float3 p2)
     float t = -(dot(N,pos) + d) / NdotRayDirection;
 
     // check if the triangle is in behind the ray
-    if (t < EPSILON)return 0;  //the triangle is behind 
+    if (t < 0)return 0;  //the triangle is behind 
 
     // compute the intersection point using equation 1
     float3 P = pos + t * vel;
@@ -360,23 +390,23 @@ float collideTriangle(float3 pos, float3 vel,float3 p0,float3 p1,float3 p2)
     float3 vp0 = P - p0;
     C = cross(edge0,vp0);
 
-    if (dot(N,C) < EPSILON) return 0;  //P is on the right side 
+    if (dot(N,C) < 0) return 0;  //P is on the right side 
 
     // edge 1
     float3 edge1 = p2 - p1;
     float3 vp1 = P - p1;
 
     C = cross(edge1,vp1);
-    if (dot(N,C) < EPSILON)   return 0;  //P is on the right side 
+    if (dot(N,C) < 0)   return 0;  //P is on the right side 
 
     // edge 2
     float3 edge2 = p0 - p2;
     float3 vp2 = P - p2;
     C = cross(edge2,vp2);
 
-    if (dot(N,C) <EPSILON)  return 0;  //P is on the right side; 
+    if (dot(N,C) < 0)  return 0;  //P is on the right side; 
     
-    if (t*length(vel) < params.particleRadius * 2.f)
+    if (t*length(vel) < params.particleRadius * 1.5f)
         return t;
     else{
         return 0;
@@ -492,8 +522,7 @@ void collideD(float4* newVel,               // output: new velocity
     
     incForce += make_float3(inclinaison, 0.f, 0.f);
 
-   
-
+    
     newVel[originalIndex] = make_float4(vel+force, 0.0f);
 }
 

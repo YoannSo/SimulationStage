@@ -65,46 +65,60 @@ const char* spherePixelShader = STRINGIFY(
 );
 
 
-const char* meshVertexShader = STRINGIFY(
-    void main()
+
+
+
+
+const char* testVertex = STRINGIFY(
+    uniform float pointRadius;  // point size in world space
+uniform float pointScale;   // scale to calculate size in pixels
+uniform float densityScale;
+uniform float densityOffset;
+uniform float colorMode;
+void main()
 {
     // calculate window-space point size
 
-    vec3 posEye = vec3(gl_ModelViewMatrix * vec4(gl_Vertex.xyz, 1.0));
-    float dist = length(posEye);
-    gl_PointSize = pointRadius * (pointScale / dist);
-    gl_TexCoord[0] = gl_MultiTexCoord0;
+  
+    gl_Position = gl_ModelViewProjectionMatrix* vec4(gl_Vertex.xyz, 1.0);
 
-    gl_Position = gl_ModelViewProjectionMatrix * vec4(gl_Vertex.xyz, 1.0);
+}
+);
 
-
-    if (colorMode == 1) {
-        gl_FrontColor = vec4(1.f, gl_Vertex.y + 1, 0.f, 0.f);
-
-    }
-    else if (colorMode == -1) {
-        gl_FrontColor = gl_Color;
-
-    }
-});
-const char* meshPixelShader = STRINGIFY(
+// pixel shader for rendering points as shaded spheres
+const char* testPixel = STRINGIFY(
     void main()
 {
-   
+    
 
-   const vec3 lightDir = vec3(0.577, 0.577, 0.577);
+    gl_FragColor = vec4(0.5, 0.0, 0.5, 1.0);
+}
+);
 
-    // calculate normal from texture coordinates
-    vec3 N;
-    N.xy = gl_TexCoord[0].xy * vec2(2.0, -2.0) + vec2(-1.0, 1.0);
-    float mag = dot(N.xy, N.xy);
+//-----------------------------------------------------------------------------------------
+const char* meshVertex = STRINGIFY(
 
-    if (mag > 1.0) discard;   // kill pixels outside circle
+  layout(location = 0) in vec3 aVertexPosition;
 
-    N.z = sqrt(1.0 - mag);
+uniform mat4 uMVPMatrix; // Projection * View * Model
 
-    // calculate lighting
-    float diffuse = max(0.0, dot(lightDir, N));
 
-    gl_FragColor = gl_Color * diffuse;
-});
+void main()
+{
+    gl_Position = uMVPMatrix * vec4(aVertexPosition, 1.f);
+
+}
+);
+
+// pixel shader for rendering points as shaded spheres
+const char* meshFrag = STRINGIFY(
+
+    layout(location = 0) out vec4 fragColor;
+
+void main()
+{
+    fragColor = vec4(1.f, 0.f, 0.f, 1.f);
+}
+
+
+);

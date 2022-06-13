@@ -13,7 +13,6 @@
 #include <math.h>
 #include <assert.h>
 #include <stdio.h>
-#include <opencv2/opencv.hpp>
 
  // OpenGL Graphics includes
 #define HELPERGL_EXTERN_GL_FUNC_IMPLEMENTATION
@@ -60,8 +59,6 @@ void ParticleRenderer::_drawPoints()
 {
     if (!m_vbo)
     {
-        printf("5\n");
-
         glBegin(GL_POINTS);
         {
             int k = 0;
@@ -88,7 +85,7 @@ void ParticleRenderer::_drawPoints()
             glEnableClientState(GL_COLOR_ARRAY);
         }
 
-        glDrawArrays(GL_TRIANGLES, 0, m_numParticles);
+        glDrawArrays(GL_POINTS, 0, m_numParticles);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDisableClientState(GL_VERTEX_ARRAY);
@@ -164,6 +161,7 @@ void ParticleRenderer::display(DisplayMode mode)
         glUniform1f(glGetUniformLocation(m_program, "pointRadius"), m_particleRadius);
 
         glUniform1f(glGetUniformLocation(m_program, "colorMode"), m_color_mode);
+
         glColor3f(1, 1, 1);
         _drawPoints();
 
@@ -208,15 +206,6 @@ ParticleRenderer::_compileProgram(const char* vsource, const char* fsource)
     return program;
 }
 
-void ParticleRenderer::takeScreenshot(int i) {
-    cv::Mat img(480, 640, CV_8UC3);
-    glPixelStorei(GL_PACK_ALIGNMENT, (img.step & 3) ? 1 : 4);
-    glPixelStorei(GL_PACK_ROW_LENGTH, img.step / img.elemSize());
-    glReadPixels(0, 0, img.cols, img.rows, GL_BGR_EXT, GL_UNSIGNED_BYTE, img.data);
-    cv::Mat flipped(img);
-    cv::flip(img, flipped, 0);
-    cv::imwrite("img/snapshot" + std::to_string(i) + ".png", img);
-}
 
 void ParticleRenderer::_initGL()
 {

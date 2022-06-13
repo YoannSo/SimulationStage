@@ -57,7 +57,6 @@ public:
         m_window_h = h;
     }
 
-    void takeScreenshot(int i);
 
 protected: // methods
     void _initGL();

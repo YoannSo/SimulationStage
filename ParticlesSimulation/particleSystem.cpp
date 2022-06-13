@@ -32,6 +32,9 @@
 #ifndef CUDART_PI_F
 #define CUDART_PI_F         3.141592654f
 #endif
+#include <assimp/Importer.hpp>
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
 int compteurCycle = 0;
 ParticleSystem::ParticleSystem(uint numParticles, uint3 gridSize, bool bUseOpenGL) :
     m_bInitialized(false),
@@ -41,8 +44,6 @@ ParticleSystem::ParticleSystem(uint numParticles, uint3 gridSize, bool bUseOpenG
     m_hVel(0),
     m_dPos(0),
     m_dVel(0),
-    m_dTriangle(0),
-    m_hTriangle(0),
     m_gridSize(gridSize),
     m_timer(NULL),
     m_solverIterations(1)
@@ -132,18 +133,14 @@ ParticleSystem::_initialize(int numParticles)
     assert(!m_bInitialized);
 
     m_numParticles = numParticles;
-
+    
     // allocate host storage
     m_hPos = new float[m_numParticles * 4];
     m_hVel = new float[m_numParticles * 4];
-
-    m_hTriangle = new float(3 * 4);
-
+    m_hTriangle = new float[m_test * 4];
     memset(m_hPos, 0, m_numParticles * 4 * sizeof(float));
     memset(m_hVel, 0, m_numParticles * 4 * sizeof(float));
-
-    memset(m_hTriangle, 0, 3 * 4 * sizeof(float));
-
+    memset(m_hTriangle, 0, m_test * 4 * sizeof(float));
 
     m_hCellStart = new uint[m_numGridCells];
     memset(m_hCellStart, 0, m_numGridCells * sizeof(uint));
@@ -153,21 +150,19 @@ ParticleSystem::_initialize(int numParticles)
 
     // allocate GPU data
     unsigned int memSize = sizeof(float) * 4 * m_numParticles;
-    unsigned int memTriangleSize = sizeof(float) * 4 * 3;
-
+    unsigned int testMem= sizeof(float) * 4 * m_test;
     if (m_bUseOpenGL)
     {
         m_posVbo = createVBO(memSize);
         registerGLBufferObject(m_posVbo, &m_cuda_posvbo_resource);
-        
-        m_triangleVBO = createVBO(memTriangleSize);
-        registerGLBufferObject(m_triangleVBO, &m_cuda_trianglevbo_resource);
 
+        m_triangleVBO = createVBO(testMem);
+        registerGLBufferObject(m_triangleVBO, &m_cuda_trianglevbo_resource);
     }
     else
     {
         checkCudaErrors(cudaMalloc((void**)&m_cudaPosVBO, memSize));
-        checkCudaErrors(cudaMalloc((void**)&m_cudaTriangleVBO, memTriangleSize));
+        checkCudaErrors(cudaMalloc((void**)&m_cudaTriangleVBO, testMem));
 
     }
 
@@ -216,10 +211,8 @@ ParticleSystem::_initialize(int numParticles)
     sdkCreateTimer(&m_timer);
 
     setParameters(&m_params);
-    float3 triangles[2];
-    triangles[0] = make_float3(0.f, 0.f, 0.f);
-    triangles[1] = make_float3(1.f, 1.f, 1.f);
-    setTriangles(4, triangles);
+
+
     m_bInitialized = true;
 }
 
@@ -230,15 +223,13 @@ ParticleSystem::_finalize()
 
     delete[] m_hPos;
     delete[] m_hVel;
-    delete[] m_hTriangle;
     delete[] m_hCellStart;
     delete[] m_hCellEnd;
-
+    delete[] m_hTriangle;
     freeArray(m_dVel);
-    freeArray(m_dTriangle);
     freeArray(m_dSortedPos);
     freeArray(m_dSortedVel);
-
+    freeArray(m_dTriangle);
     freeArray(m_dGridParticleHash);
     freeArray(m_dGridParticleIndex);
     freeArray(m_dCellStart);
@@ -248,17 +239,19 @@ ParticleSystem::_finalize()
     {
         unregisterGLBufferObject(m_cuda_colorvbo_resource);
         unregisterGLBufferObject(m_cuda_posvbo_resource);
+        unregisterGLBufferObject(m_cuda_trianglevbo_resource);
+
         glDeleteBuffers(1, (const GLuint*)&m_posVbo);
         glDeleteBuffers(1, (const GLuint*)&m_colorVBO);
-
-        unregisterGLBufferObject(m_cuda_trianglevbo_resource);
         glDeleteBuffers(1, (const GLuint*)&m_triangleVBO);
+
     }
     else
     {
         checkCudaErrors(cudaFree(m_cudaPosVBO));
         checkCudaErrors(cudaFree(m_cudaColorVBO));
         checkCudaErrors(cudaFree(m_cudaTriangleVBO));
+
     }
 }
 void ParticleSystem::launchForce() {
@@ -270,7 +263,6 @@ void ParticleSystem::launchForce() {
         m_dCellEnd,
         m_numParticles,
         m_numGridCells, this->m_params.inclinaison, this->m_params.pumpForce);
-   
 }
 // step the simulation
 void
@@ -279,14 +271,18 @@ ParticleSystem::update(float deltaTime)
     assert(m_bInitialized);
 
     float* dPos;
-
+    float* dTriangles;
     if (m_bUseOpenGL)
     {
         dPos = (float*)mapGLBufferObject(&m_cuda_posvbo_resource);
+        dTriangles = (float*)mapGLBufferObject(&m_cuda_trianglevbo_resource);
+
     }
     else
     {
         dPos = (float*)m_cudaPosVBO;
+        dTriangles = (float*)m_cudaTriangleVBO;
+
     }
     // update constants
     setParameters(&m_params);
@@ -294,6 +290,7 @@ ParticleSystem::update(float deltaTime)
     // integrate
     integrateSystem(
         dPos,
+        dTriangles,
         m_dVel,
         deltaTime,
         m_numParticles);
@@ -334,7 +331,6 @@ ParticleSystem::update(float deltaTime)
         m_numParticles,
         m_numGridCells, this->m_params.inclinaison);
     if (this->takeScreen && this->idScreenshot < 5 && this->m_params.nbCycles == 20&& compteurCycle%2==0) {
-        this->myRenderer->takeScreenshot(this->idScreenshot);
         this->idScreenshot++;
         compteurCycle = 0;
     }
@@ -357,7 +353,7 @@ ParticleSystem::update(float deltaTime)
     if (m_bUseOpenGL)
     {
         unmapGLBufferObject(m_cuda_posvbo_resource);
-        //unmapGLBufferObject(m_cuda_trianglevbo_resource);
+        unmapGLBufferObject(m_cuda_trianglevbo_resource);
 
     }
 }
@@ -392,13 +388,13 @@ ParticleSystem::dumpParticles(uint start, uint count)
 {
     // debug
     copyArrayFromDevice(m_hPos, 0, &m_cuda_posvbo_resource, sizeof(float) * 4 * count);
-   // copyArrayFromDevice(m_hVel, m_dVel, 0, sizeof(float) * 4 * count);
-    copyArrayFromDevice(m_hTriangle, 0, &m_cuda_trianglevbo_resource, sizeof(float) * 4 * 3);
-    for (int i = 0; i < 3 * 4; i++) {
-        printf("%f \n", m_hTriangle[i]);
+    copyArrayFromDevice(m_hVel, m_dVel, 0, sizeof(float) * 4 * count);
+
+    for (uint i = start; i < start + 1; i++)
+    {
+        printf("pos: (%.4f)\n", m_hPos[i * 4 + 1]);
 
     }
-   
 }
 
 float*
@@ -423,13 +419,11 @@ ParticleSystem::getArray(ParticleArray array)
         hdata = m_hVel;
         ddata = m_dVel;
         break;
-    case TRIANGLES:
-        hdata = m_hTriangle;
-        ddata = m_dTriangle;
-        cuda_vbo_resource = m_cuda_trianglevbo_resource;
+  
+
     }
 
-    copyArrayFromDevice(hdata, ddata, &cuda_vbo_resource, 3 * 4 * sizeof(float));
+    copyArrayFromDevice(hdata, ddata, &cuda_vbo_resource, m_numParticles * 4 * sizeof(float));
     return hdata;
 }
 
@@ -461,23 +455,20 @@ ParticleSystem::setArray(ParticleArray array, const float* data, int start, int 
     case VELOCITY:
         copyArrayToDevice(m_dVel, data, start * 4 * sizeof(float), count * 4 * sizeof(float));
         break;
-
-    case TRIANGLES:
+    case TRIANGLE:
         if (m_bUseOpenGL)
         {
             unregisterGLBufferObject(m_cuda_trianglevbo_resource);
             glBindBuffer(GL_ARRAY_BUFFER, m_triangleVBO);
-            glBufferSubData(GL_ARRAY_BUFFER, start * 4 * sizeof(float), count * 4 * sizeof(float), data);
+            glBufferSubData(GL_ARRAY_BUFFER, start * 4 * sizeof(float), m_test * 4 * sizeof(float), data);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             registerGLBufferObject(m_triangleVBO, &m_cuda_trianglevbo_resource);
         }
         else
         {
-            copyArrayToDevice(m_cudaTriangleVBO, data, start * 4 * sizeof(float), count * 4 * sizeof(float));
+            copyArrayToDevice(m_cudaTriangleVBO, data, start * 4 * sizeof(float), m_test * 4 * sizeof(float));
         }
     }
-    
-
 }
 
 inline float frand()
@@ -594,28 +585,45 @@ ParticleSystem::reset(ParticleConfig config)
         printf("%d\n", nbParticlesMaxPerLine);
         gridSize[1] =3;
         initGridTop(gridSize, spacing, jitter, m_numParticles);
+
+        
     }
     break;
     }
     setArray(POSITION, m_hPos, 0, m_numParticles);
     setArray(VELOCITY, m_hVel, 0, m_numParticles);
-
-    m_hTriangle[0] = -1.f;
+   
+    m_hTriangle[0] = 0.f;
     m_hTriangle[1] = 0.f;
     m_hTriangle[2] = 0.f;
-    m_hTriangle[3] = 1.f;
+    m_hTriangle[3] = 1.0f;
 
-    m_hTriangle[4] = 0.f;
-    m_hTriangle[5] = 0.f;
+    m_hTriangle[4] = 1.f;
+    m_hTriangle[5] = -1.f;
     m_hTriangle[6] = 0.f;
-    m_hTriangle[7] = 1.f;
+    m_hTriangle[7] = 1.0f;
 
     m_hTriangle[8] = 0.f;
-    m_hTriangle[9] = -1.f;
-    m_hTriangle[10] = 0.f;
-    m_hTriangle[11] = 1.f;
+    m_hTriangle[9] = 1.f;
+    m_hTriangle[10] = 1.f;
+    m_hTriangle[11] = 1.0f;
 
-    setArray(TRIANGLES, m_hTriangle, 0, 3);
+    m_hTriangle[12] = 0.f;
+    m_hTriangle[13] = 0.f;
+    m_hTriangle[14] = 0.f;
+    m_hTriangle[15] = 1.0f;
+
+    m_hTriangle[16] = 1.f;
+    m_hTriangle[17] = -1.f;
+    m_hTriangle[18] = 0.f;
+    m_hTriangle[19] = 1.0f;
+
+    m_hTriangle[20] = 0.f;
+    m_hTriangle[21] = +1.f;
+    m_hTriangle[22] = -1.f;
+    m_hTriangle[23] = 1.0f;
+    setArray(TRIANGLE, m_hTriangle, 0, m_test);
+
 }
 
 void
@@ -654,4 +662,9 @@ ParticleSystem::addSphere(int start, float* pos, float* vel, int r, float spacin
 
     setArray(POSITION, m_hPos, start, index);
     setArray(VELOCITY, m_hVel, start, index);
+}
+
+void ParticleSystem::loadMesh(const std::string& p_name, const std::string& p_path)
+{
+
 }

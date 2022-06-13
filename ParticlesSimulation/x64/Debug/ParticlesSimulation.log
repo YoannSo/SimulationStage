@@ -1,8 +1,7 @@
-﻿  particles.cpp
-  render_mesh.cpp
-C:\cours\M1\stage\SimulationStage\ParticlesSimulation\render_mesh.cpp(214,64): warning C4267: 'argument' : conversion de 'size_t' en 'GLint', perte possible de données
-LINK : warning LNK4075: ' /INCREMENTAL' ignoré à cause de la spécification '/LTCG'
-  Génération de code en cours
+﻿  triangle_mesh.cpp
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\triangle_mesh.cpp(21,73): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
+  Generating code
   Not all modules are compiled with -Gy (function comdat), build without incremental LTCG.
-  Fin de la génération du code
+  Finished generating code
   ParticlesSimulation.vcxproj -> C:\cours\M1\stage\SimulationStage\x64\Debug\ParticlesSimulation.exe

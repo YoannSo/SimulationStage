@@ -128,7 +128,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opencv_world455d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(CudaToolkitLibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -149,7 +149,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opencv_world455.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(CudaToolkitLibDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <CudaCompile>
@@ -164,11 +164,13 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="mesh_renderer.cpp" />
     <ClCompile Include="particles.cpp" />
     <ClCompile Include="particleSystem.cpp" />
-    <ClCompile Include="render_mesh.cpp" />
     <ClCompile Include="render_particles.cpp" />
     <ClCompile Include="shaders.cpp" />
+    <ClCompile Include="triangle_mesh.cpp" />
+    <ClCompile Include="triangle_mesh_model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ParticleSystem.cuh" />
@@ -180,12 +182,14 @@
     <None Include="particles_kernel_impl.cuh" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="render_mesh.h" />
     <ClInclude Include="param.h" />
     <ClInclude Include="paramgl.h" />
     <ClInclude Include="particleSystem.h" />
-    <ClInclude Include="render_mesh.h" />
     <ClInclude Include="shaders.h" />
     <ClInclude Include="render_particles.h" />
+    <ClInclude Include="triangle_mesh.h" />
+    <ClInclude Include="triangle_mesh_model.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

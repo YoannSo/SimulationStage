@@ -9,13 +9,14 @@
  *
  */
 
-#ifndef __RENDER_MESHES__
-#define __RENDER_MESHES__
+#include "triangle_mesh_model.h"
+#ifndef __RENDER_MESH__
+#define __RENDER_MESH__
 
 class MeshRenderer
 {
 public:
-    MeshRenderer();
+    MeshRenderer(std::string p_name,std::string p_dirPath);
     ~MeshRenderer();
 
     void setPositions(float* pos, int numParticles);
@@ -58,14 +59,17 @@ public:
     }
 
     void takeScreenshot(int i);
-
+    void loadMesh();
 protected: // methods
-    void _initGL();
+    void _initGL(std::string p_name, std::string p_dirPath);
     void _drawPoints();
     void _drawLines();
     GLuint _compileProgram(const char* vsource, const char* fsource);
 
 protected: // data
+
+    TriangleMeshModel _model;
+
     float* m_pos;
     int m_numParticles;
 

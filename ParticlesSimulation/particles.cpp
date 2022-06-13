@@ -51,8 +51,8 @@
 #include "particleSystem.h"
 #include "render_particles.h"
 #include "render_mesh.h"
+
 #include "paramgl.h"
-#include <opencv2/opencv.hpp>
 
 #define MAX_EPSILON_ERROR 5.00f
 #define THRESHOLD         0.30f
@@ -71,6 +71,8 @@ float camera_trans_lag[] = { 0, 0, -3 };
 float camera_rot_lag[] = { 0, 0, 0 };
 const float inertia = 0.1f;
 ParticleRenderer::DisplayMode displayMode = ParticleRenderer::PARTICLE_SPHERES;
+MeshRenderer::DisplayMode test = MeshRenderer::PARTICLE_SPHERES;
+
 int mode = 0;
 bool displayEnabled = true;
 bool bPause = false;
@@ -148,11 +150,12 @@ void initParticleSystem(int numParticles, uint3 gridSize, bool bUseOpenGL)
         renderer->setParticleRadius(psystem->getParticleRadius());
         renderer->setColorBuffer(psystem->getColorBuffer());
 
-        meshRenderer = new MeshRenderer;
-        renderer->setParticleRadius(psystem->getParticleRadius());
-        renderer->setColorBuffer(psystem->getColorBuffer());
-    }
+        meshRenderer = new MeshRenderer("test","../data/uvSphere/uv_spheres.obj");
+        meshRenderer->setParticleRadius(psystem->getParticleRadius());
+        meshRenderer->setColorBuffer(psystem->getColorBuffer());
 
+
+    }
     sdkCreateTimer(&timer);
 }
 
@@ -290,8 +293,11 @@ void display()
         if (renderer)
         {
             renderer->setVertexBuffer(psystem->getCurrentReadBuffer(), psystem->getNumParticles());
-           meshRenderer->setVertexBuffer(psystem->getCurrentReadBufferTriangle(),1);
+
         }
+        if(meshRenderer)
+            meshRenderer->setVertexBuffer(psystem->getCurrentReadBufferTriangle(), psystem->getNumTriangles());
+
     }
 
     // render
@@ -331,36 +337,25 @@ void display()
     glPopMatrix();
     int nbTrianglePoints = psystem->getNbTrianglePoints();
     float3* trianglePoints=psystem->getTrianglesPoints();
+
    /* for (int i = 0; i < nbTrianglePoints * 3; i++) {
         glBegin(GL_TRIANGLES);
-        glColor3f(0.1+i, 0.2, 0.3);
-        trianglePoints[0].x;
-
-       glVertex3f(trianglePoints[i].x, trianglePoints[i].y, trianglePoints[i].z);
+        glColor3f(0.1, 0.2, 0.3);
+        glVertex3f(trianglePoints[i].x, trianglePoints[i].y, trianglePoints[i].z);
         glVertex3f(trianglePoints[i+1].x, trianglePoints[i+1].y, trianglePoints[i+1].z);
         glVertex3f(trianglePoints[i+2].x, trianglePoints[i+2].y, trianglePoints[i+2].z);
         glEnd();
         i += 2;
     }*/
-   /* glBegin(GL_TRIANGLES);
-    glColor3f(0.1, 0.2, 0.3);
-    glVertex3f(t1.x, t1.y, t1.z);
-    glVertex3f(t2.x,t2.y,t2.z);
-    glVertex3f(t3.x, t3.y, t3.z);
-    glEnd();
-    glBegin(GL_TRIANGLES);
-    glColor3f(1.f, 0.2, 0.3);
-    glVertex3f(t1.x,t1.y, t1.z);
-    glVertex3f(t2.x, t2.y, t2.z);
-    glVertex3f(t4.x, t4.y, t4.z);
-    glEnd();*/
     
     if (renderer && displayEnabled)
     {
         renderer->display(displayMode);
-       // meshRenderer->display();
     }
-
+    if (meshRenderer && displayEnabled)
+    {
+        meshRenderer->display(test);
+    }
     if (displaySliders)
     {
         glDisable(GL_DEPTH_TEST);
@@ -411,6 +406,11 @@ void reshape(int w, int h)
     {
         renderer->setWindowSize(w, h);
         renderer->setFOV(60.0);
+    }
+    if (meshRenderer)
+    {
+        meshRenderer->setWindowSize(w, h);
+        meshRenderer->setFOV(60.0);
     }
 }
 
@@ -552,10 +552,9 @@ void motion(int x, int y)
 
         psystem->setColliderPos(p);
 
-        float3 p1 = make_float3(p.x + 1.f, p.y - 1.f, p.z);
-        float3 p2 = make_float3(p.x, p.y + 1.f, p.z + 1.f);
-        float3 p3 = make_float3(p.x, p.y + 1.f, p.z - 1.f);
-        psystem->setTrianglePos(p, p1, p2, p3);
+        float3 p1 =  make_float3(p.x+1.f, p.y-1.f,p.z);
+        float3 p2 = make_float3(p.x , p.y+1.f, p.z + 1.f);
+        float3 p3 = make_float3(p.x, p.y+1.f , p.z - 1.f);
         float3 triangles[6];
         triangles[0] = p;
         triangles[1] = p1;
@@ -594,6 +593,8 @@ void key(unsigned char key, int /*x*/, int /*y*/)
         {
             renderer->setVertexBuffer(psystem->getCurrentReadBuffer(), psystem->getNumParticles());
         }
+        if(meshRenderer)
+            meshRenderer->setVertexBuffer(psystem->getCurrentReadBufferTriangle(),3);
 
         break;
 

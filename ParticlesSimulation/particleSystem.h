@@ -20,6 +20,8 @@
 #include "vector_functions.h"
 #include "render_particles.h"
 #include "render_mesh.h"
+#include "triangle_mesh_model.h"
+
  // Particle system class
 class ParticleSystem
 {
@@ -39,7 +41,7 @@ public:
     {
         POSITION,
         VELOCITY,
-        TRIANGLES,
+        TRIANGLE
     };
 
     void update(float deltaTime);
@@ -150,15 +152,14 @@ public:
         m_params.p1 = p1;
         m_params.p2 = p2;
         m_params.p3 = p3;
-       
     }
     void addAllTriangles(int nbTriangles, float3* triangles) {
         m_params.nbTrianglesPoints = nbTriangles;
-        int nbTriangle=nbTriangles;
-        cudaMalloc((void**)&nbTriangle, sizeof(int));
-
-        cudaMemcpyToSymbol("nbT", &nbTriangle, sizeof(int), 0, cudaMemcpyHostToDevice);
-       
+        m_params.trianglesPoints = (float3 *) malloc(3 * sizeof(float3) * nbTriangles);
+        for (int i = 0; i < nbTriangles * 3; i++) {
+            printf("%d", i);
+            m_params.trianglesPoints[i] = triangles[i];
+        }
     }
     float3* getTrianglesPoints() {
         return m_params.trianglesPoints;
@@ -181,6 +182,9 @@ public:
     float3 getP3()
     {
         return m_params.p3;
+    }
+    int getNumTriangles() {
+        return this->m_test;
     }
     float getParticleRadius()
     {
@@ -208,7 +212,7 @@ public:
     }
 
     void addSphere(int index, float* pos, float* vel, int r, float spacing);
-
+    void loadMesh(const std::string& p_name, const std::string& p_path);
 protected: // methods
     ParticleSystem() {}
     uint createVBO(uint size);
@@ -221,16 +225,19 @@ protected: // methods
 
 protected: // data
     bool m_bInitialized, m_bUseOpenGL;
-    uint m_numParticles;
 
+
+    uint m_numParticles;
+    uint m_test=6;
     // CPU data
     float* m_hPos;              // particle positions
     float* m_hVel;              // particle velocities
     float* m_hTriangle;
+
     uint* m_hParticleHash;
     uint* m_hCellStart;
     uint* m_hCellEnd;
-
+    
     // GPU data
     float* m_dPos;
     float* m_dVel;

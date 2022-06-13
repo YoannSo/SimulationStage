@@ -220,7 +220,7 @@ void MeshRenderer::takeScreenshot(int i) {
 
 void MeshRenderer::_initGL()
 {
-    m_program = _compileProgram(vertexShader, spherePixelShader);
+    m_program = _compileProgram(meshPixelShader, spherePixelShader);
 
 #if !defined(__APPLE__) && !defined(MACOSX)
     glClampColorARB(GL_CLAMP_VERTEX_COLOR_ARB, GL_FALSE);
