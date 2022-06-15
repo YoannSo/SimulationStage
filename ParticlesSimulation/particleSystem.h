@@ -98,7 +98,7 @@ public:
         this->myRenderer = myRenderer;
     }
     void setMeshRenderer(MeshRenderer* myRenderer) {
-        this->meshRenderer = myRenderer;
+        this->_meshRenderer = myRenderer;
     }
     void setIterations(int i)
     {
@@ -210,7 +210,7 @@ public:
     {
         return m_params.cellSize;
     }
-
+    MeshRenderer* getMeshRenderer() { return _meshRenderer; }
     void addSphere(int index, float* pos, float* vel, int r, float spacing);
     void loadMesh(const std::string& p_name, const std::string& p_path);
 protected: // methods
@@ -278,7 +278,9 @@ protected: // data
     uint m_solverIterations;
 
     ParticleRenderer* myRenderer;
-    MeshRenderer* meshRenderer;
+    MeshRenderer* _meshRenderer;
+    int _nbVertices = 0;
+    int _nbTriangles = 0;
     int idScreenshot = 0;
     bool takeScreen = false;
 };

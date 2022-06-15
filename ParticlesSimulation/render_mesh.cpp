@@ -13,7 +13,6 @@
 #include <math.h>
 #include <assert.h>
 #include <stdio.h>
-#include <opencv2/opencv.hpp>
 
  // OpenGL Graphics includes
 #define HELPERGL_EXTERN_GL_FUNC_IMPLEMENTATION
@@ -26,8 +25,9 @@
 #ifndef M_PI
 #define M_PI    3.1415926535897932384626433832795
 #endif
+#include "read_file.h"
 
-MeshRenderer::MeshRenderer()
+MeshRenderer::MeshRenderer(std::string p_name, std::string p_dirPath)
     : m_pos(0),
     m_numParticles(0),
     m_pointSize(1.0f),
@@ -36,7 +36,7 @@ MeshRenderer::MeshRenderer()
     m_vbo(0),
     m_colorVBO(0)
 {
-    _initGL();
+    _initGL(p_name,p_dirPath);
 }
 
 MeshRenderer::~MeshRenderer()
@@ -58,45 +58,7 @@ void MeshRenderer::setVertexBuffer(unsigned int vbo, int numParticles)
 
 void MeshRenderer::_drawPoints()
 {
-    if (!m_vbo)
-    {
-        printf("5\n");
 
-        glBegin(GL_POINTS);
-        {
-            int k = 0;
-
-            for (int i = 0; i < 3; ++i)
-            {
-                glVertex3fv(&m_pos[k]);
-                k += 4;
-            }
-        }
-        glEnd();
-    }
-    else
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glVertexPointer(4, GL_FLOAT, 0, 0);
-        glEnableClientState(GL_VERTEX_ARRAY);
-
-
-        if (m_colorVBO)
-        {
-            glBindBuffer(GL_ARRAY_BUFFER, m_colorVBO);
-            glColorPointer(4, GL_FLOAT, 0, 0);
-            glEnableClientState(GL_COLOR_ARRAY);
-        }
-
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_COLOR_ARRAY);
-    }
-}
-void MeshRenderer::_drawLines()
-{
     if (!m_vbo)
     {
         glBegin(GL_POINTS);
@@ -124,63 +86,74 @@ void MeshRenderer::_drawLines()
             glColorPointer(4, GL_FLOAT, 0, 0);
             glEnableClientState(GL_COLOR_ARRAY);
         }
-        glDrawArrays(GL_POINTS, 0, 3);
-
+        glDrawArrays(GL_TRIANGLES, 0, m_numParticles);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_COLOR_ARRAY);
+    }
+}
+void MeshRenderer::_drawLines()
+{
 
+    if (!m_vbo)
+    {
+        glBegin(GL_POINTS);
+        {
+            int k = 0;
+
+            for (int i = 0; i < m_numParticles; ++i)
+            {
+                glVertex3fv(&m_pos[k]);
+                k += 4;
+            }
+        }
+        glEnd();
+    }
+    else
+    {
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
         glVertexPointer(4, GL_FLOAT, 0, 0);
         glEnableClientState(GL_VERTEX_ARRAY);
 
 
+        if (m_colorVBO)
+        {
+            glBindBuffer(GL_ARRAY_BUFFER, m_colorVBO);
+            glColorPointer(4, GL_FLOAT, 0, 0);
+            glEnableClientState(GL_COLOR_ARRAY);
+        }
+        glDrawArrays(GL_POINTS, 0, m_numParticles);
+
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glDisableClientState(GL_VERTEX_ARRAY);
         glDisableClientState(GL_COLOR_ARRAY);
     }
 }
 void MeshRenderer::display(DisplayMode mode)
 {
-    switch (mode)
-    {
-    case PARTICLE_LINE:
-        glColor3f(1, 1, 1);
-        _drawLines();
-        break;
-    case PARTICLE_POINTS:
-        glColor3f(1, 1, 1);
-        glPointSize(m_pointSize);
-        _drawPoints();
-        break;
-
-    default:
-    case PARTICLE_SPHERES:
-        glEnable(GL_POINT_SPRITE_ARB);
-        glTexEnvi(GL_POINT_SPRITE_ARB, GL_COORD_REPLACE_ARB, GL_TRUE);
-        glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-        glDepthMask(GL_TRUE);
-        glEnable(GL_DEPTH_TEST);
-
-        glUseProgram(m_program);
-        glUniform1f(glGetUniformLocation(m_program, "pointScale"), m_window_h / tanf(m_fov * 0.5f * (float)M_PI / 180.0f));
-        glUniform1f(glGetUniformLocation(m_program, "pointRadius"), m_particleRadius);
-
-        glUniform1f(glGetUniformLocation(m_program, "colorMode"), m_color_mode);
-        glColor3f(1, 1, 1);
-        _drawPoints();
-
-        glUseProgram(0);
-        glDisable(GL_POINT_SPRITE_ARB);
-        break;
-    }
+    
+    _model.render(m_program);
 }
 
 GLuint
-MeshRenderer::_compileProgram(const char* vsource, const char* fsource)
+MeshRenderer::_compileProgram()
 {
+    const std::string _shaderFolder = "shaders/";
+
+    const std::string vertexShaderSrc = readFile(_shaderFolder + "mesh.vert");
+    const std::string fragmentShaderSrc = readFile(_shaderFolder + "mesh.frag");
+
+    // Convert to GLchar *
+    const GLchar* vSrc = vertexShaderSrc.c_str();
+    const GLchar* fSrc = fragmentShaderSrc.c_str();
+    
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-    glShaderSource(vertexShader, 1, &vsource, 0);
-    glShaderSource(fragmentShader, 1, &fsource, 0);
+
+
+    glShaderSource(vertexShader, 1, &vSrc, 0);
+    glShaderSource(fragmentShader, 1, &fSrc, 0);
 
     glCompileShader(vertexShader);
     glCompileShader(fragmentShader);
@@ -208,19 +181,13 @@ MeshRenderer::_compileProgram(const char* vsource, const char* fsource)
     return program;
 }
 
-void MeshRenderer::takeScreenshot(int i) {
-    cv::Mat img(480, 640, CV_8UC3);
-    glPixelStorei(GL_PACK_ALIGNMENT, (img.step & 3) ? 1 : 4);
-    glPixelStorei(GL_PACK_ROW_LENGTH, img.step / img.elemSize());
-    glReadPixels(0, 0, img.cols, img.rows, GL_BGR_EXT, GL_UNSIGNED_BYTE, img.data);
-    cv::Mat flipped(img);
-    cv::flip(img, flipped, 0);
-    cv::imwrite("img/snapshot" + std::to_string(i) + ".png", img);
-}
 
-void MeshRenderer::_initGL()
+void MeshRenderer::_initGL(std::string p_name,std::string p_dirPath)
 {
-    m_program = _compileProgram(meshPixelShader, spherePixelShader);
+    _model.load(p_name, p_dirPath);
+   
+
+    m_program = _compileProgram();
 
 #if !defined(__APPLE__) && !defined(MACOSX)
     glClampColorARB(GL_CLAMP_VERTEX_COLOR_ARB, GL_FALSE);

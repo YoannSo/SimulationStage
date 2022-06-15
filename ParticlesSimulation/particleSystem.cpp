@@ -125,6 +125,7 @@ void colorRamp(float t, float* r)
     r[0] = lerp(c[i][0], c[i + 1][0], u);
     r[1] = lerp(c[i][1], c[i + 1][1], u);
     r[2] = lerp(c[i][2], c[i + 1][2], u);
+ 
 }
 
 void
@@ -133,14 +134,19 @@ ParticleSystem::_initialize(int numParticles)
     assert(!m_bInitialized);
 
     m_numParticles = numParticles;
-    
+    _meshRenderer = new MeshRenderer("test", "../data/avion_papier/avion_papier.obj");
+
     // allocate host storage
     m_hPos = new float[m_numParticles * 4];
     m_hVel = new float[m_numParticles * 4];
-    m_hTriangle = new float[m_test * 4];
+    TriangleMeshModel model = _meshRenderer->getModel();
+    _nbTriangles = model._nbTriangles;
+    _nbVertices = model._nbVertices;
+    m_hTriangle = new float[_nbVertices * 4];
+
     memset(m_hPos, 0, m_numParticles * 4 * sizeof(float));
     memset(m_hVel, 0, m_numParticles * 4 * sizeof(float));
-    memset(m_hTriangle, 0, m_test * 4 * sizeof(float));
+    memset(m_hTriangle, 0, _nbVertices * 4 * sizeof(float));
 
     m_hCellStart = new uint[m_numGridCells];
     memset(m_hCellStart, 0, m_numGridCells * sizeof(uint));
@@ -150,7 +156,7 @@ ParticleSystem::_initialize(int numParticles)
 
     // allocate GPU data
     unsigned int memSize = sizeof(float) * 4 * m_numParticles;
-    unsigned int testMem= sizeof(float) * 4 * m_test;
+    unsigned int testMem= sizeof(float) * 4 * _nbVertices;
     if (m_bUseOpenGL)
     {
         m_posVbo = createVBO(memSize);
@@ -167,6 +173,7 @@ ParticleSystem::_initialize(int numParticles)
     }
 
     allocateArray((void**)&m_dVel, memSize);
+    allocateArray((void**)&m_dTriangle, testMem);
 
     allocateArray((void**)&m_dSortedPos, memSize);
     allocateArray((void**)&m_dSortedVel, memSize);
@@ -275,7 +282,7 @@ ParticleSystem::update(float deltaTime)
     if (m_bUseOpenGL)
     {
         dPos = (float*)mapGLBufferObject(&m_cuda_posvbo_resource);
-        dTriangles = (float*)mapGLBufferObject(&m_cuda_trianglevbo_resource);
+       dTriangles = (float*)mapGLBufferObject(&m_cuda_trianglevbo_resource);
 
     }
     else
@@ -456,17 +463,19 @@ ParticleSystem::setArray(ParticleArray array, const float* data, int start, int 
         copyArrayToDevice(m_dVel, data, start * 4 * sizeof(float), count * 4 * sizeof(float));
         break;
     case TRIANGLE:
+        //TriangleMeshModel currentModel = meshRenderer->getModel();
+       // int nbPoints = currentModel._nbVertices;
         if (m_bUseOpenGL)
         {
             unregisterGLBufferObject(m_cuda_trianglevbo_resource);
             glBindBuffer(GL_ARRAY_BUFFER, m_triangleVBO);
-            glBufferSubData(GL_ARRAY_BUFFER, start * 4 * sizeof(float), m_test * 4 * sizeof(float), data);
+            glBufferSubData(GL_ARRAY_BUFFER, start * 4 * sizeof(float), _nbVertices * 4 * sizeof(float), data);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
             registerGLBufferObject(m_triangleVBO, &m_cuda_trianglevbo_resource);
         }
         else
         {
-            copyArrayToDevice(m_cudaTriangleVBO, data, start * 4 * sizeof(float), m_test * 4 * sizeof(float));
+            copyArrayToDevice(m_cudaTriangleVBO, data, start * 4 * sizeof(float), _nbVertices * 4 * sizeof(float));
         }
     }
 }
@@ -592,37 +601,18 @@ ParticleSystem::reset(ParticleConfig config)
     }
     setArray(POSITION, m_hPos, 0, m_numParticles);
     setArray(VELOCITY, m_hVel, 0, m_numParticles);
-   
-    m_hTriangle[0] = 0.f;
-    m_hTriangle[1] = 0.f;
-    m_hTriangle[2] = 0.f;
-    m_hTriangle[3] = 1.0f;
 
-    m_hTriangle[4] = 1.f;
-    m_hTriangle[5] = -1.f;
-    m_hTriangle[6] = 0.f;
-    m_hTriangle[7] = 1.0f;
+    TriangleMeshModel currentModel = _meshRenderer->getModel();
+    //int nbTriangles = currentModel._nbTriangles;
+    //int nbPoints = currentModel._nbVertices;
 
-    m_hTriangle[8] = 0.f;
-    m_hTriangle[9] = 1.f;
-    m_hTriangle[10] = 1.f;
-    m_hTriangle[11] = 1.0f;
+    for (int i = 0; i < _nbTriangles; i++) {
+        m_hTriangle[i] = currentModel._meshes[0]._vertices[i]._position.x;
+        m_hTriangle[i+1] = currentModel._meshes[0]._vertices[i]._position.y;
+        m_hTriangle[i+2] = currentModel._meshes[0]._vertices[i]._position.z;
+    }
 
-    m_hTriangle[12] = 0.f;
-    m_hTriangle[13] = 0.f;
-    m_hTriangle[14] = 0.f;
-    m_hTriangle[15] = 1.0f;
-
-    m_hTriangle[16] = 1.f;
-    m_hTriangle[17] = -1.f;
-    m_hTriangle[18] = 0.f;
-    m_hTriangle[19] = 1.0f;
-
-    m_hTriangle[20] = 0.f;
-    m_hTriangle[21] = +1.f;
-    m_hTriangle[22] = -1.f;
-    m_hTriangle[23] = 1.0f;
-    setArray(TRIANGLE, m_hTriangle, 0, m_test);
+    setArray(TRIANGLE, m_hTriangle, 0, _nbVertices);
 
 }
 

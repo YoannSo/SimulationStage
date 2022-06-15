@@ -164,7 +164,7 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="mesh_renderer.cpp" />
+    <ClCompile Include="render_mesh.cpp" />
     <ClCompile Include="particles.cpp" />
     <ClCompile Include="particleSystem.cpp" />
     <ClCompile Include="render_particles.cpp" />
@@ -180,6 +180,8 @@
     </CudaCompile>
     <None Include="particles_kernel.cuh" />
     <None Include="particles_kernel_impl.cuh" />
+    <None Include="shaders\mesh.frag" />
+    <None Include="shaders\mesh.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="render_mesh.h" />
@@ -188,6 +190,7 @@
     <ClInclude Include="particleSystem.h" />
     <ClInclude Include="shaders.h" />
     <ClInclude Include="render_particles.h" />
+    <ClInclude Include="read_file.h" />
     <ClInclude Include="triangle_mesh.h" />
     <ClInclude Include="triangle_mesh_model.h" />
   </ItemGroup>

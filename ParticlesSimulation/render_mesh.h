@@ -59,12 +59,14 @@ public:
     }
 
     void takeScreenshot(int i);
-    void loadMesh();
+    void loadMesh(const std::string& p_name, const std::string& p_path);
+   
+    TriangleMeshModel& getModel() { return _model; }
 protected: // methods
     void _initGL(std::string p_name, std::string p_dirPath);
     void _drawPoints();
     void _drawLines();
-    GLuint _compileProgram(const char* vsource, const char* fsource);
+    GLuint _compileProgram();
 
 protected: // data
 

@@ -1,7 +1,1 @@
-﻿  triangle_mesh.cpp
-C:\cours\M1\stage\SimulationStage\ParticlesSimulation\triangle_mesh.cpp(21,73): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
-  Generating code
-  Not all modules are compiled with -Gy (function comdat), build without incremental LTCG.
-  Finished generating code
-  ParticlesSimulation.vcxproj -> C:\cours\M1\stage\SimulationStage\x64\Debug\ParticlesSimulation.exe
+﻿  ParticlesSimulation.vcxproj -> C:\cours\M1\stage\SimulationStage\x64\Debug\ParticlesSimulation.exe

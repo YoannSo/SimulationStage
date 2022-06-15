@@ -143,7 +143,7 @@ extern "C"
         thrust::device_ptr<float4> d_pos4((float4*)pos);
         thrust::device_ptr<float4> d_vel4((float4*)vel);
         thrust::device_ptr<float4> d_triangle((float4*)triangles);
-        
+        //printf("%d %f \n", sizeof(vel) / sizeof(vel[0]));
         thrust::for_each(
             thrust::make_zip_iterator(thrust::make_tuple(d_pos4, d_vel4)),
             thrust::make_zip_iterator(thrust::make_tuple(d_pos4 + numParticles, d_vel4 + numParticles)),

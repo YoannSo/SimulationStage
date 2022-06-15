@@ -6,7 +6,7 @@
 	{
 		std::cout << "Loading: " << p_filePath << std::endl;
 		Assimp::Importer importer;
-
+		_name=p_name;
 		// Read scene and triangulate meshes
 		const aiScene* const scene
 			= importer.ReadFile(p_filePath, aiProcess_Triangulate | aiProcess_GenNormals | aiProcess_GenUVCoords);
@@ -93,7 +93,6 @@
 			_nbVertices += p_mesh->mNumVertices;
 
 			_meshes.push_back(TriangleMesh(meshName, vertices, indices));
-
 
 			std::cout << "-- Done! "						  //
 				<< indices.size() / 3 << " triangles, " //

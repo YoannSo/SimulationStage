@@ -1,16 +1,6 @@
-/*
- * Copyright 1993-2015 NVIDIA Corporation.  All rights reserved.
- *
- * Please refer to the NVIDIA end user license agreement (EULA) associated
- * with this source code for terms and conditions that govern your use of
- * this software. Any use, reproduction, disclosure, or distribution of
- * this software and related documentation outside the terms of the EULA
- * is strictly prohibited.
- *
- */
+
 
 #define STRINGIFY(A) #A
-
  // vertex shader
 const char* vertexShader = STRINGIFY(
     uniform float pointRadius;  // point size in world space
@@ -80,13 +70,16 @@ void main()
     // calculate window-space point size
 
   
-    gl_Position = gl_ModelViewProjectionMatrix* vec4(gl_Vertex.xyz, 1.0);
+
+    gl_Position = gl_ModelViewProjectionMatrix* vec4(gl_Vertex.x+5.f, gl_Vertex.y, gl_Vertex.z, 1.0);
 
 }
 );
 
 // pixel shader for rendering points as shaded spheres
 const char* testPixel = STRINGIFY(
+
+    
     void main()
 {
     
@@ -98,14 +91,13 @@ const char* testPixel = STRINGIFY(
 //-----------------------------------------------------------------------------------------
 const char* meshVertex = STRINGIFY(
 
-  layout(location = 0) in vec3 aVertexPosition;
 
 uniform mat4 uMVPMatrix; // Projection * View * Model
 
 
 void main()
 {
-    gl_Position = uMVPMatrix * vec4(aVertexPosition, 1.f);
+    gl_Position = uMVPMatrix * vec4(gl_Vertex.xyz, 1.0);
 
 }
 );
@@ -113,11 +105,10 @@ void main()
 // pixel shader for rendering points as shaded spheres
 const char* meshFrag = STRINGIFY(
 
-    layout(location = 0) out vec4 fragColor;
 
 void main()
 {
-    fragColor = vec4(1.f, 0.f, 0.f, 1.f);
+    gl_FragColor = vec4(0.5, 0.0, 0.5, 1.0);
 }
 
 

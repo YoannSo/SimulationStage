@@ -90,7 +90,7 @@ uint3 gridSize;
 int numIterations = 0; // run until exit
 
 float timestep = 0.5f;
-float damping = 0.0f;
+float damping = 0.5f;
 float gravity = 0.0003f;
 int iterations = 1;
 int ballr = 10;
@@ -141,16 +141,15 @@ void initParticleSystem(int numParticles, uint3 gridSize, bool bUseOpenGL)
 {
     psystem = new ParticleSystem(numParticles, gridSize, bUseOpenGL);
     psystem->reset(ParticleSystem::CONFIG_TOP);
-    psystem->setRenderer(renderer);
-    psystem->setMeshRenderer(meshRenderer);
 
+    psystem->setRenderer(renderer);
+    meshRenderer = psystem->getMeshRenderer();
     if (bUseOpenGL)
     {
         renderer = new ParticleRenderer;
         renderer->setParticleRadius(psystem->getParticleRadius());
         renderer->setColorBuffer(psystem->getColorBuffer());
 
-        meshRenderer = new MeshRenderer("test","../data/uvSphere/uv_spheres.obj");
         meshRenderer->setParticleRadius(psystem->getParticleRadius());
         meshRenderer->setColorBuffer(psystem->getColorBuffer());
 
@@ -202,17 +201,7 @@ void initGL(int* argc, char** argv)
 }
 void AddPlane()
 {
-    glClear(GL_DEPTH_BUFFER_BIT);
-
-    glColor3d(1.0, 1.0, 1.0);
-    glBegin(GL_POLYGON);
-    glVertex3d(-cubeSizeX, -1, psystem->getCubeSize());
-    glVertex3d(-cubeSizeX, 1, psystem->getCubeSize());
-    glVertex3d(cubeSizeX, 1, psystem->getCubeSize());
-    glVertex3d(cubeSizeX, -1, psystem->getCubeSize());
-
-    glEnd();
-    glFlush();
+    
 }
 
 void runBenchmark(int iterations, char* exec_path)

@@ -19,7 +19,7 @@
 		void render(const GLuint p_glProgram);
 
 		void cleanGL();
-
+		
 	private:
 		void	 _loadMesh(const aiMesh* const p_mesh, const aiScene* const p_scene);
 

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{75a8c8a3-c278-403d-ade5-ee7f4e1608cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="particles.cpp">
@@ -27,7 +30,7 @@
     <ClCompile Include="shaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="mesh_renderer.cpp">
+    <ClCompile Include="render_mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="triangle_mesh.cpp">
@@ -47,6 +50,8 @@
     <None Include="ParticleSystem.cuh">
       <Filter>Header Files</Filter>
     </None>
+    <None Include="shaders\mesh.frag" />
+    <None Include="shaders\mesh.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="render_particles.h">
@@ -71,6 +76,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="triangle_mesh_model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="read_file.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
