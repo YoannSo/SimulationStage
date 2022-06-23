@@ -31,6 +31,7 @@ extern "C"
     void integrateSystem(float* pos,
         float* vel,
         float* triangles,
+        unsigned int* indices,
         float deltaTime,
         uint numParticles);
 

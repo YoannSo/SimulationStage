@@ -131,8 +131,12 @@ void MeshRenderer::_drawLines()
 }
 void MeshRenderer::display(DisplayMode mode)
 {
+    glUseProgram(m_program);
+    
     
     _model.render(m_program);
+    glUseProgram(0);
+
 }
 
 GLuint
@@ -146,7 +150,7 @@ MeshRenderer::_compileProgram()
     // Convert to GLchar *
     const GLchar* vSrc = vertexShaderSrc.c_str();
     const GLchar* fSrc = fragmentShaderSrc.c_str();
-    
+
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -154,6 +158,7 @@ MeshRenderer::_compileProgram()
 
     glShaderSource(vertexShader, 1, &vSrc, 0);
     glShaderSource(fragmentShader, 1, &fSrc, 0);
+
 
     glCompileShader(vertexShader);
     glCompileShader(fragmentShader);
@@ -185,8 +190,6 @@ MeshRenderer::_compileProgram()
 void MeshRenderer::_initGL(std::string p_name,std::string p_dirPath)
 {
     _model.load(p_name, p_dirPath);
-   
-
     m_program = _compileProgram();
 
 #if !defined(__APPLE__) && !defined(MACOSX)

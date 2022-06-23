@@ -26,7 +26,7 @@ struct SimParams
     float3 p1;
     float3 p2;
     float3 p3;
-
+    int nbIndices;
     float3* trianglesPoints;
     int nbTrianglesPoints;
 
@@ -41,7 +41,7 @@ struct SimParams
 
     uint numBodies;
     uint maxParticlesPerCell;
-
+    float nbVertices;
     float spring;
     float damping;
     float shear;

@@ -10,6 +10,8 @@
  */
 
 #include "triangle_mesh_model.h"
+#include <glm/glm/glm.hpp>
+
 #ifndef __RENDER_MESH__
 #define __RENDER_MESH__
 
@@ -60,7 +62,25 @@ public:
 
     void takeScreenshot(int i);
     void loadMesh(const std::string& p_name, const std::string& p_path);
-   
+    void setMVPMatrix(float* p_MVP) {
+        _model.setMVPMatrix(p_MVP);
+    }
+    void setProjectionMatrix(glm::mat4 projectionMatrix) {
+        _model.setProjectionMatrix(projectionMatrix);
+    }
+    void setViewMatrix(glm::mat4 projectionMatrix){}
+    void setCamPos(glm::vec3 p_camPos) {
+        _model.setCamPos(p_camPos);
+    }
+    unsigned int* getEbo() {
+        return _model.getEbo().data();
+        
+    }
+    int getEboSize() {
+        std::vector<unsigned int> temp = _model.getEbo();
+        temp.shrink_to_fit();
+        return temp.size();
+    }
     TriangleMeshModel& getModel() { return _model; }
 protected: // methods
     void _initGL(std::string p_name, std::string p_dirPath);
@@ -71,7 +91,6 @@ protected: // methods
 protected: // data
 
     TriangleMeshModel _model;
-
     float* m_pos;
     int m_numParticles;
 
@@ -82,7 +101,6 @@ protected: // data
     int m_window_w, m_window_h;
 
     GLuint m_program;
-
     GLuint m_vbo;
     GLuint m_colorVBO;
 };

@@ -2,12 +2,29 @@
 
 layout( location = 0 ) out vec4 fragColor;
 
+
+in vec3 anAdaptedVertexNormal;
+in vec3 aVertexPositionOut;
+in vec3 vs_sourceLight;
+
 void main()
 {
- const vec3 lightDir = vec3(0.577, 0.577, 0.577);
+	vec3 color=vec3(1.0,0.0,0.0);
 
-      vec3 N;
-    N.xy = gl_TexCoord[0].xy * vec2(2.0, -2.0) + vec2(-1.0, 1.0);
+	vec3 lightDir =  vec3(0.0, 0.0, 0.0);
 
-	fragColor = vec4( 1.f, 0.f, 0.f, 1.f );
+	vec3 normal=anAdaptedVertexNormal;
+
+	vec3 Li = normalize( vs_sourceLight - aVertexPositionOut );	//vecteur de la lumière émise
+
+	if( dot(Li, normal) < 0 ){
+		normal *= -1;
+	}
+
+	vec3 eclairage_diffus = max ( dot( normalize(anAdaptedVertexNormal) , Li ), 0.f ) * color;
+
+
+	fragColor = vec4( anAdaptedVertexNormal, 0.f );
+	
+
 }

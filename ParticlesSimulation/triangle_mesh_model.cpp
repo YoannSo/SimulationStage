@@ -39,9 +39,10 @@
 
 	void TriangleMeshModel::render(const GLuint p_glProgram)
 	{
+
 		for (size_t i = 0; i < _meshes.size(); i++)
 		{
-			_meshes[i].render(p_glProgram);
+			_meshes[i].render(p_glProgram,_MVPMatrix,_projectionMatrix,_camPos);
 		}
 	}
 
@@ -92,7 +93,7 @@
 			_nbTriangles += p_mesh->mNumFaces;
 			_nbVertices += p_mesh->mNumVertices;
 
-			_meshes.push_back(TriangleMesh(meshName, vertices, indices));
+			_meshes.push_back(TriangleMesh(meshName, vertices, indices, Material()));
 
 			std::cout << "-- Done! "						  //
 				<< indices.size() / 3 << " triangles, " //

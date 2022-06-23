@@ -41,7 +41,10 @@
 // CUDA utilities and system includes
 #include <helper_functions.h>
 #include <helper_cuda.h>    // includes cuda.h and cuda_runtime_api.h
+#include <glm/glm/glm.hpp>
 
+#include "glm/glm/gtc/matrix_transform.hpp"
+#include "glm/glm/gtx/string_cast.hpp"
 // Includes
 #include <stdlib.h>
 #include <cstdlib>
@@ -58,13 +61,14 @@
 #define THRESHOLD         0.30f
 
 #define GRID_SIZE       64
-#define NUM_PARTICLES  5000
+#define NUM_PARTICLES  75000
 
 const uint width = 640, height = 480;
 
 // view params
 int ox, oy;
 int buttonState = 0;
+
 float camera_trans[] = { 0, 0, -4};
 float camera_rot[] = { 0, 180.f, 0 };
 float camera_trans_lag[] = { 0, 0, -3 };
@@ -90,7 +94,7 @@ uint3 gridSize;
 int numIterations = 0; // run until exit
 
 float timestep = 0.5f;
-float damping = 0.5f;
+float damping = 0.9f;
 float gravity = 0.0003f;
 int iterations = 1;
 int ballr = 10;
@@ -307,7 +311,17 @@ void display()
     glRotatef(camera_rot_lag[1], 0.0, 1.0, 0.0);
 
     glGetFloatv(GL_MODELVIEW_MATRIX, modelView);
-
+    
+    //glm::vec3 camPos = glm::vec3(camera_trans[0], camera_trans[1], camera_trans[2]);
+    //glm::mat4 identity = glm::mat4(1.f);
+    //glm::mat4 test1 = glm::rotate(identity,camera_rot[0],glm::vec3(1.f,0.f,0.f));
+    //glm::mat4 test2 = glm::rotate(test1, camera_rot[1], glm::vec3(0.f, 1.f, 0.f));
+    //camPos *= test1;
+   // printf("Trans: %f %f %f \n", camera_trans[0], camera_trans[1], camera_trans[2]);
+   // printf("ROT: %f %f %f \n", camera_rot[0], camera_rot[1], camera_rot[2]);
+    //printf("POS:f %f %f \n", camPos[0], camPos[1], camPos[2]);
+    meshRenderer->setMVPMatrix(modelView);
+    meshRenderer->setCamPos(glm::vec3(0.f, 0.f, -3.f));
     // cube
     AddPlane();
     glColor3f(1.0, 1.0, 1.0);
@@ -336,19 +350,19 @@ void display()
         glEnd();
         i += 2;
     }*/
-    
-    if (renderer && displayEnabled)
-    {
-        renderer->display(displayMode);
-    }
     if (meshRenderer && displayEnabled)
     {
         meshRenderer->display(test);
     }
+    if (renderer && displayEnabled)
+    {
+        renderer->display(displayMode);
+    }
+ 
     if (displaySliders)
     {
         glDisable(GL_DEPTH_TEST);
-        glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO); // invert color
+       glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO); // invert color
         glEnable(GL_BLEND);
         params->Render(0, 0);
         glDisable(GL_BLEND);
@@ -384,13 +398,15 @@ void addSphere()
 
 void reshape(int w, int h)
 {
+    
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(60.0, (float)w / (float)h, 0.1, 100.0);
 
     glMatrixMode(GL_MODELVIEW);
     glViewport(0, 0, w, h);
-
+    glm::mat4 test= glm::perspective(glm::radians(60.f), (float)w / (float)h, 0.1f, 100.f);
+    meshRenderer->setProjectionMatrix(test);
     if (renderer)
     {
         renderer->setWindowSize(w, h);

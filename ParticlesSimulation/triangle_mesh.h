@@ -4,7 +4,8 @@
 #include <string>
 #include <GL/glew.h>
 #include <vector_types.h>
-
+#include <helper_math.h>
+#include <glm/glm/glm.hpp>
 struct Vertex
 {
 	float3 _position;
@@ -15,18 +16,25 @@ struct Vertex
 	//Vec3f _tangent; calculer tbn, scale correctement, quand le scale n'est pas uniforme
 	//Vec3f _bitangent;
 };
+struct Material
+{
+	float _ambient[3] = { 1.0, 1.0, 1.0 };
+	float _diffuse[3] = { 0.f, 0.f, 0.f };
+	float _specular[3] = { 0.f, 0.f, 0.f };
+	float _shininess = 0.f;
 
+};
 class TriangleMesh
 {
 public:
 	TriangleMesh() = delete;
 	TriangleMesh(const std::string& p_name,
 		const std::vector<Vertex>& p_vertices,
-		const std::vector<unsigned int>& p_indices);
+		const std::vector<unsigned int>& p_indices, const Material& p_material);
 
 	~TriangleMesh() = default;
 
-	void render(const GLuint p_glProgram) const;
+	void render(const GLuint p_glProgram, glm::mat4 p_MVPMatrix, glm::mat4 p_ProjectionMatrix,glm::vec3 p_camPos) const;
 	
 	void cleanGL();
 
@@ -42,6 +50,7 @@ public:
 	
 	std::vector<float3>		  _position;
 	std::vector<float3>		  _normal;
+	Material _material;
 
 
 

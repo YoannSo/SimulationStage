@@ -1,4 +1,4 @@
-/*
+    /*
  * Copyright 1993-2015 NVIDIA Corporation.  All rights reserved.
  *
  * Please refer to the NVIDIA end user license agreement (EULA) associated
@@ -42,8 +42,10 @@ ParticleSystem::ParticleSystem(uint numParticles, uint3 gridSize, bool bUseOpenG
     m_numParticles(numParticles),
     m_hPos(0),
     m_hVel(0),
+    m_hIndices(0),
     m_dPos(0),
     m_dVel(0),
+    m_dIndices(0),
     m_gridSize(gridSize),
     m_timer(NULL),
     m_solverIterations(1)
@@ -58,7 +60,7 @@ ParticleSystem::ParticleSystem(uint numParticles, uint3 gridSize, bool bUseOpenG
     m_params.numCells = m_numGridCells;
     m_params.numBodies = m_numParticles;
 
-    m_params.particleRadius = 1.0f / 128.0f;
+    m_params.particleRadius = 1.0f /128.0f; // TODO: la particule du coin qui passe => chelou ?
     m_params.colliderPos = make_float3(0.f, 0.f, 0.f);
     m_params.p0 = make_float3(0.f, 0.f, 0.f);
     m_params.p1 = make_float3(0.f, 0.f, 0.f);
@@ -81,6 +83,9 @@ ParticleSystem::ParticleSystem(uint numParticles, uint3 gridSize, bool bUseOpenG
     m_params.globalDamping = 1.0f;
 
     _initialize(numParticles);
+    m_params.nbVertices = _nbVertices;
+
+
 }
 
 ParticleSystem::~ParticleSystem()
@@ -134,29 +139,39 @@ ParticleSystem::_initialize(int numParticles)
     assert(!m_bInitialized);
 
     m_numParticles = numParticles;
-    _meshRenderer = new MeshRenderer("test", "../data/avion_papier/avion_papier.obj");
+    
+    _meshRenderer = new MeshRenderer("test", "../data/objets/laTrompette.obj");
+   //_meshRenderer = new MeshRenderer("test", "../data/avion_papier/avion_papier.obj");
 
+    _sizeIndices = _meshRenderer->getEboSize();
+    printf(" j'ai: %d \n", _sizeIndices);
     // allocate host storage
     m_hPos = new float[m_numParticles * 4];
     m_hVel = new float[m_numParticles * 4];
+    m_hIndices = new unsigned int[_sizeIndices];
+
     TriangleMeshModel model = _meshRenderer->getModel();
     _nbTriangles = model._nbTriangles;
     _nbVertices = model._nbVertices;
     m_hTriangle = new float[_nbVertices * 4];
-
+    m_params.nbIndices = _sizeIndices;
     memset(m_hPos, 0, m_numParticles * 4 * sizeof(float));
     memset(m_hVel, 0, m_numParticles * 4 * sizeof(float));
+
     memset(m_hTriangle, 0, _nbVertices * 4 * sizeof(float));
+    memset(m_hIndices, 0, _sizeIndices  * sizeof(unsigned int));
 
     m_hCellStart = new uint[m_numGridCells];
     memset(m_hCellStart, 0, m_numGridCells * sizeof(uint));
-
+        
     m_hCellEnd = new uint[m_numGridCells];
     memset(m_hCellEnd, 0, m_numGridCells * sizeof(uint));
 
     // allocate GPU data
     unsigned int memSize = sizeof(float) * 4 * m_numParticles;
     unsigned int testMem= sizeof(float) * 4 * _nbVertices;
+    unsigned int indicesMem = sizeof(unsigned int)  * _sizeIndices;
+
     if (m_bUseOpenGL)
     {
         m_posVbo = createVBO(memSize);
@@ -173,6 +188,7 @@ ParticleSystem::_initialize(int numParticles)
     }
 
     allocateArray((void**)&m_dVel, memSize);
+    allocateArray((void**)&m_dIndices, indicesMem);
     allocateArray((void**)&m_dTriangle, testMem);
 
     allocateArray((void**)&m_dSortedPos, memSize);
@@ -233,6 +249,8 @@ ParticleSystem::_finalize()
     delete[] m_hCellStart;
     delete[] m_hCellEnd;
     delete[] m_hTriangle;
+    delete[] m_hIndices;
+   freeArray(m_dIndices);
     freeArray(m_dVel);
     freeArray(m_dSortedPos);
     freeArray(m_dSortedVel);
@@ -295,10 +313,12 @@ ParticleSystem::update(float deltaTime)
     setParameters(&m_params);
 
     // integrate
-    integrateSystem(
-        dPos,
-        dTriangles,
-        m_dVel,
+    for (int i = 0; i < 2; i++)
+        integrateSystem(
+            dPos,
+            m_dVel,
+            dTriangles,
+            m_dIndices,
         deltaTime,
         m_numParticles);
 
@@ -477,6 +497,9 @@ ParticleSystem::setArray(ParticleArray array, const float* data, int start, int 
         {
             copyArrayToDevice(m_cudaTriangleVBO, data, start * 4 * sizeof(float), _nbVertices * 4 * sizeof(float));
         }
+    case INDICES:
+        copyArrayToDevice(m_dIndices, data, start  * sizeof(unsigned int), _sizeIndices * sizeof(unsigned int));
+        break;
     }
 }
 
@@ -591,8 +614,8 @@ ParticleSystem::reset(ParticleConfig config)
         gridSize[0] = nbParticlesMaxPerLine;
         int nbProf = (int)(m_numParticles / nbParticlesMaxPerLine) + 1;
         gridSize[2] = nbProf;
-        printf("%d\n", nbParticlesMaxPerLine);
-        gridSize[1] =3;
+        printf("%d %d %d\n", nbProf, nbParticlesMaxPerLine);
+        gridSize[1] =25;
         initGridTop(gridSize, spacing, jitter, m_numParticles);
 
         
@@ -605,14 +628,22 @@ ParticleSystem::reset(ParticleConfig config)
     TriangleMeshModel currentModel = _meshRenderer->getModel();
     //int nbTriangles = currentModel._nbTriangles;
     //int nbPoints = currentModel._nbVertices;
-
-    for (int i = 0; i < _nbTriangles; i++) {
-        m_hTriangle[i] = currentModel._meshes[0]._vertices[i]._position.x;
-        m_hTriangle[i+1] = currentModel._meshes[0]._vertices[i]._position.y;
-        m_hTriangle[i+2] = currentModel._meshes[0]._vertices[i]._position.z;
+    printf("%d %d \n", _nbVertices, _nbTriangles);
+    int j = 0;
+    for (int i = 0; i < _nbVertices*4; i+=4) {
+        m_hTriangle[i] = currentModel._meshes[0]._vertices[j]._position.x;
+        m_hTriangle[i+1] = currentModel._meshes[0]._vertices[j]._position.y;
+        m_hTriangle[i+2] = currentModel._meshes[0]._vertices[j]._position.z;
+        m_hTriangle[i + 3] = 1.f;
+        j++;
     }
-
+    for (int i = 0; i < _sizeIndices; i++) {
+        m_hIndices[i] = currentModel._meshes[0]._indices[i];
+    }
+   
+    
     setArray(TRIANGLE, m_hTriangle, 0, _nbVertices);
+    copyArrayToDevice(m_dIndices, m_hIndices, 0 * sizeof(unsigned int), _sizeIndices * sizeof(unsigned int));
 
 }
 

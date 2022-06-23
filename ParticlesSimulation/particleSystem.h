@@ -41,7 +41,8 @@ public:
     {
         POSITION,
         VELOCITY,
-        TRIANGLE
+        TRIANGLE,
+        INDICES
     };
 
     void update(float deltaTime);
@@ -232,6 +233,7 @@ protected: // data
     // CPU data
     float* m_hPos;              // particle positions
     float* m_hVel;              // particle velocities
+    unsigned int* m_hIndices;
     float* m_hTriangle;
 
     uint* m_hParticleHash;
@@ -241,6 +243,7 @@ protected: // data
     // GPU data
     float* m_dPos;
     float* m_dVel;
+    unsigned int* m_dIndices;
     float* m_dTriangle;
 
     float* m_dSortedPos;
@@ -282,6 +285,7 @@ protected: // data
     int _nbVertices = 0;
     int _nbTriangles = 0;
     int idScreenshot = 0;
+    int _sizeIndices=0;
     bool takeScreen = false;
 };
 

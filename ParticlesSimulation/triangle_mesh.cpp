@@ -3,22 +3,35 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <iostream>
-
+#include <thrust/memory.h>
+#include "glm/glm/gtc/type_ptr.hpp"
 	TriangleMesh::TriangleMesh(const std::string& p_name,
 		const std::vector<Vertex>& p_vertices,
-		const std::vector<unsigned int>& p_indices) :
+		const std::vector<unsigned int>& p_indices, const Material& p_material) :
 		_name(p_name),
-		_vertices(p_vertices), _indices(p_indices)
+		_vertices(p_vertices), _indices(p_indices), _material(p_material)
 	{
 		_vertices.shrink_to_fit();
 		_indices.shrink_to_fit();
 		_setupGL();
 	}
 
-	void TriangleMesh::render(const GLuint p_glProgram) const
+	void TriangleMesh::render(const GLuint p_glProgram,glm::mat4 p_MVPMatrix,glm::mat4 p_ProjectionMatrix,glm::vec3 p_camPos) const
 	{
+
+
 		glBindVertexArray(_vao); /*bind VAO avec le programme*/
 		//lancement du rendu dans les shaders
+		glm::mat4 MVP = p_ProjectionMatrix * p_MVPMatrix;
+		glProgramUniform3fv(p_glProgram, glGetUniformLocation(p_glProgram, "ambientColor"), 1, _material._ambient);
+		glProgramUniform3fv(p_glProgram, glGetUniformLocation(p_glProgram, "difuseColor"), 1, _material._diffuse);
+		glProgramUniform3fv(p_glProgram, glGetUniformLocation(p_glProgram, "specularColor"), 1, _material._specular);
+		glProgramUniform1f(p_glProgram, glGetUniformLocation(p_glProgram, "coefBrillance"), _material._shininess);
+		glProgramUniformMatrix4fv(p_glProgram, glGetUniformLocation(p_glProgram, "uMVPMatrix"), 1, GL_FALSE,glm::value_ptr( MVP));
+		glProgramUniformMatrix4fv(p_glProgram, glGetUniformLocation(p_glProgram, "uMVMatrix"), 1, GL_FALSE, glm::value_ptr(p_MVPMatrix));
+		glProgramUniform3fv(p_glProgram, glGetUniformLocation(p_glProgram, "uCamPos"), 1, glm::value_ptr(p_camPos));
+
+
 		glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
 
 		glBindVertexArray(0); /*debind VAO*/

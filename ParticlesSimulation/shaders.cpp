@@ -59,35 +59,6 @@ const char* spherePixelShader = STRINGIFY(
 
 
 
-const char* testVertex = STRINGIFY(
-    uniform float pointRadius;  // point size in world space
-uniform float pointScale;   // scale to calculate size in pixels
-uniform float densityScale;
-uniform float densityOffset;
-uniform float colorMode;
-void main()
-{
-    // calculate window-space point size
-
-  
-
-    gl_Position = gl_ModelViewProjectionMatrix* vec4(gl_Vertex.x+5.f, gl_Vertex.y, gl_Vertex.z, 1.0);
-
-}
-);
-
-// pixel shader for rendering points as shaded spheres
-const char* testPixel = STRINGIFY(
-
-    
-    void main()
-{
-    
-
-    gl_FragColor = vec4(0.5, 0.0, 0.5, 1.0);
-}
-);
-
 //-----------------------------------------------------------------------------------------
 const char* meshVertex = STRINGIFY(
 
@@ -97,7 +68,8 @@ uniform mat4 uMVPMatrix; // Projection * View * Model
 
 void main()
 {
-    gl_Position = uMVPMatrix * vec4(gl_Vertex.xyz, 1.0);
+    gl_Position = uMVPMatrix * vec4(gl_Vertex.xyz, 1.0);   
+    gl_FrontColor = vec4(1.f, gl_Vertex.y + 1, 0.f, 0.f);
 
 }
 );
@@ -106,10 +78,9 @@ void main()
 const char* meshFrag = STRINGIFY(
 
 
-void main()
+    void main()
 {
-    gl_FragColor = vec4(0.5, 0.0, 0.5, 1.0);
+    gl_FragColor = gl_Color;
+    qsdqsdsd
 }
-
-
 );
