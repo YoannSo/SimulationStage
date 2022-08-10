@@ -18,72 +18,72 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="particles.cpp">
+    <ClCompile Include="particleSystem\particles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="particleSystem.cpp">
+    <ClCompile Include="particleSystem\particleSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="render_particles.cpp">
+    <ClCompile Include="renderer\render_particles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="shaders.cpp">
+    <ClCompile Include="renderer\shaders.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="render_mesh.cpp">
+    <ClCompile Include="renderer\render_mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="triangle_mesh.cpp">
+    <ClCompile Include="mesh\triangle_mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="triangle_mesh_model.cpp">
+    <ClCompile Include="mesh\triangle_mesh_model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="particles_kernel.cuh">
+    <None Include="particleSystem\particles_kernel.cuh">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="particles_kernel_impl.cuh">
-      <Filter>Header Files</Filter>
-    </None>
-    <None Include="ParticleSystem.cuh">
+    <None Include="particleSystem\ParticleSystem.cuh">
       <Filter>Header Files</Filter>
     </None>
     <None Include="shaders\mesh.frag" />
     <None Include="shaders\mesh.vert" />
+    <None Include="particleSystem\particles_kernel_impl.cuh">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="render_particles.h">
+    <ClInclude Include="renderer\render_particles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="shaders.h">
+    <ClInclude Include="renderer\shaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="paramgl.h">
+    <ClInclude Include="utils\paramgl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="param.h">
+    <ClInclude Include="utils\param.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="particleSystem.h">
+    <ClInclude Include="particleSystem\particleSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="render_mesh.h">
+    <ClInclude Include="renderer\render_mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="triangle_mesh.h">
+    <ClInclude Include="mesh\triangle_mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="triangle_mesh_model.h">
+    <ClInclude Include="mesh\triangle_mesh_model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="read_file.h">
+    <ClInclude Include="utils\read_file.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="particleSystem_cuda.cu">
+    <CudaCompile Include="particleSystem\particleSystem_cuda.cu">
       <Filter>Header Files</Filter>
     </CudaCompile>
   </ItemGroup>
