@@ -108,6 +108,10 @@
 			vertex._normal.y = p_mesh->mNormals[v].y;
 			vertex._normal.z = p_mesh->mNormals[v].z;
 		}
+<<<<<<< HEAD
+=======
+		printf("_max: %f %f %f _min %f %f %f \n", _max.x, _max.y, _max.z, _min.x, _min.y, _min.z);
+>>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 			// Load indices.
 			std::vector<unsigned int> indices;
 			indices.resize(p_mesh->mNumFaces * 3); // Triangulated.

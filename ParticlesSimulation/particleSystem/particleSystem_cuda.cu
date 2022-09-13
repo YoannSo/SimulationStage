@@ -140,7 +140,11 @@ extern "C"
         unsigned int* indices,
         float* copperBalls,
         float deltaTime,
+<<<<<<< HEAD
         uint numParticles,int* gridCopperBalls,int* gridCopperBallsHash,uint * numInteraction,int * gridHashTriangle,int* gridAdaptedTriangles
+=======
+        uint numParticles, int* gridTrianglesIndex,int* gridCopperBalls,uint * numInteraction
+>>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     )
     {
         thrust::device_ptr<float4> d_pos4((float4*)pos);
@@ -149,7 +153,11 @@ extern "C"
         thrust::for_each(
             thrust::make_zip_iterator(thrust::make_tuple(d_pos4, d_vel4)),
             thrust::make_zip_iterator(thrust::make_tuple(d_pos4 + numParticles, d_vel4 + numParticles)),
+<<<<<<< HEAD
             integrate_functor(deltaTime, triangles,indices, copperBalls, gridCopperBalls, gridCopperBallsHash, numInteraction, gridHashTriangle,gridAdaptedTriangles));
+=======
+            integrate_functor(deltaTime, triangles,indices, gridTrianglesIndex, copperBalls, gridCopperBalls, numInteraction));
+>>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     }
 
     void calcHash(uint* gridParticleHash,
@@ -169,7 +177,49 @@ extern "C"
         // check if kernel invocation generated an error
         getLastCudaError("Kernel execution failed");
     }
+<<<<<<< HEAD
   
+=======
+    void calcTriangleGrid(
+        uint* gridTrianglesIndex,
+        float* posTriangles,
+        int    numTriangles)
+    {
+        uint numThreads, numBlocks;
+        computeGridSize(numTriangles, 256, numBlocks, numThreads);
+        // execute the kernel
+        calcHashTriangles << < numBlocks, numThreads >> > (gridTrianglesIndex,
+            (float4*)posTriangles,
+            numTriangles);
+    }
+    void reorderDataAndFindCellStartTriangle(uint* cellStart,
+        uint* cellEnd,
+        float* sortedTriangle,
+        uint* gridTriangleHash,
+        uint* gridTriangleIndex,
+        float* oldTriangle,
+        uint   numTriangles,
+        uint   numCells)
+    {
+        uint numThreads, numBlocks;
+        computeGridSize(numTriangles, 256, numBlocks, numThreads);
+
+        // set all cells to empty
+        checkCudaErrors(cudaMemset(cellStart, 0xffffffff, numCells * sizeof(uint)));
+
+        uint smemSize = sizeof(uint) * (numThreads + 1);
+        reorderDataAndFindCellStartTriangles << < numBlocks, numThreads, smemSize >> > (
+            cellStart,
+            cellEnd,
+            (float4*)sortedTriangle,
+            gridTriangleHash,
+            gridTriangleIndex,
+            (float4*) oldTriangle,
+            numCells);
+        getLastCudaError("Kernel execution failed: reorderDataAndFindCellStartD");
+
+    }
+>>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     void reorderDataAndFindCellStart(uint* cellStart,
         uint* cellEnd,
         float* sortedPos,

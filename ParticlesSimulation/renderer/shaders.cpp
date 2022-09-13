@@ -20,7 +20,11 @@ void main()
     gl_Position = gl_ModelViewProjectionMatrix * vec4(gl_Vertex.xyz, 1.0);
 
 
+<<<<<<< HEAD
     if (colorMode ==1) {
+=======
+    if (colorMode == 1) {
+>>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
         gl_FrontColor = vec4(1.f, gl_Vertex.y+0.3f, 0.f, 0.f);
 
     }
