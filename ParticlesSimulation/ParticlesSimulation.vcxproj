@@ -164,35 +164,39 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="render_mesh.cpp" />
-    <ClCompile Include="particles.cpp" />
-    <ClCompile Include="particleSystem.cpp" />
-    <ClCompile Include="render_particles.cpp" />
-    <ClCompile Include="shaders.cpp" />
-    <ClCompile Include="triangle_mesh.cpp" />
-    <ClCompile Include="triangle_mesh_model.cpp" />
+    <ClCompile Include="renderer\render_copperBalls.cpp" />
+    <ClCompile Include="renderer\render_mesh.cpp" />
+    <ClCompile Include="particleSystem\particles.cpp" />
+    <ClCompile Include="particleSystem\particleSystem.cpp" />
+    <ClCompile Include="renderer\render_particles.cpp" />
+    <ClCompile Include="renderer\shaders.cpp" />
+    <ClCompile Include="mesh\triangle_mesh.cpp" />
+    <ClCompile Include="mesh\triangle_mesh_model.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ParticleSystem.cuh" />
-    <CudaCompile Include="particleSystem_cuda.cu">
+    <None Include="particleSystem\ParticleSystem.cuh" />
+    <CudaCompile Include="particleSystem\particleSystem_cuda.cu">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <FileType>Document</FileType>
     </CudaCompile>
-    <None Include="particles_kernel.cuh" />
-    <None Include="particles_kernel_impl.cuh" />
+    <None Include="particleSystem\particles_kernel.cuh" />
+    <None Include="particleSystem\particles_kernel_impl.cuh">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </None>
     <None Include="shaders\mesh.frag" />
     <None Include="shaders\mesh.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="render_mesh.h" />
-    <ClInclude Include="param.h" />
-    <ClInclude Include="paramgl.h" />
-    <ClInclude Include="particleSystem.h" />
-    <ClInclude Include="shaders.h" />
-    <ClInclude Include="render_particles.h" />
-    <ClInclude Include="read_file.h" />
-    <ClInclude Include="triangle_mesh.h" />
-    <ClInclude Include="triangle_mesh_model.h" />
+    <ClInclude Include="renderer\render_copperBalls.h" />
+    <ClInclude Include="renderer\render_mesh.h" />
+    <ClInclude Include="utils\param.h" />
+    <ClInclude Include="utils\paramgl.h" />
+    <ClInclude Include="particleSystem\particleSystem.h" />
+    <ClInclude Include="renderer\shaders.h" />
+    <ClInclude Include="renderer\render_particles.h" />
+    <ClInclude Include="utils\read_file.h" />
+    <ClInclude Include="mesh\triangle_mesh.h" />
+    <ClInclude Include="mesh\triangle_mesh_model.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

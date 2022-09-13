@@ -1,1 +1,81 @@
-﻿  ParticlesSimulation.vcxproj -> C:\cours\M1\stage\SimulationStage\x64\Release\ParticlesSimulation.exe
+﻿  Compiling CUDA source file particleSystem\particleSystem_cuda.cu...
+  
+  C:\cours\M1\stage\SimulationStage\ParticlesSimulation>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\bin\nvcc.exe" -gencode=arch=compute_35,code=\"sm_35,compute_35\" -gencode=arch=compute_37,code=\"sm_37,compute_37\" -gencode=arch=compute_50,code=\"sm_50,compute_50\" -gencode=arch=compute_52,code=\"sm_52,compute_52\" -gencode=arch=compute_60,code=\"sm_60,compute_60\" -gencode=arch=compute_61,code=\"sm_61,compute_61\" -gencode=arch=compute_70,code=\"sm_70,compute_70\" -gencode=arch=compute_75,code=\"sm_75,compute_75\" -gencode=arch=compute_80,code=\"sm_80,compute_80\" -gencode=arch=compute_86,code=\"sm_86,compute_86\" -gencode=arch=compute_52,code=\"sm_52,compute_52\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64" -x cu   -IC:\cours\M1\stage\SimulationStage\\includes -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.4\include"     --keep-dir x64\Release  -maxrregcount=0  --machine 64 --compile -cudart static    -DWIN32 -DNDEBUG -D_CONSOLE -DWIN32 -D_MBCS -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc142.pdb /FS   /MT " -o x64\Release\particleSystem_cuda.cu.obj "C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem_cuda.cu" 
+c:\cours\m1\stage\simulationstage\particlessimulation\particlesystem\particles_kernel_impl.cuh(506): warning : variable "Factor" was declared but never referenced
+  
+c:\cours\m1\stage\simulationstage\particlessimulation\particlesystem\particles_kernel_impl.cuh(506): warning : variable "Factor" was declared but never referenced
+  
+c:\cours\m1\stage\simulationstage\particlessimulation\particlesystem\particles_kernel_impl.cuh(506): warning : variable "Factor" was declared but never referenced
+  
+c:\cours\m1\stage\simulationstage\particlessimulation\particlesystem\particles_kernel_impl.cuh(506): warning : variable "Factor" was declared but never referenced
+  
+c:\cours\m1\stage\simulationstage\particlessimulation\particlesystem\particles_kernel_impl.cuh(506): warning : variable "Factor" was declared but never referenced
+  
+c:\cours\m1\stage\simulationstage\particlessimulation\particlesystem\particles_kernel_impl.cuh(506): warning : variable "Factor" was declared but never referenced
+  
+c:\cours\m1\stage\simulationstage\particlessimulation\particlesystem\particles_kernel_impl.cuh(506): warning : variable "Factor" was declared but never referenced
+  
+c:\cours\m1\stage\simulationstage\particlessimulation\particlesystem\particles_kernel_impl.cuh(506): warning : variable "Factor" was declared but never referenced
+  
+c:\cours\m1\stage\simulationstage\particlessimulation\particlesystem\particles_kernel_impl.cuh(506): warning : variable "Factor" was declared but never referenced
+  
+c:\cours\m1\stage\simulationstage\particlessimulation\particlesystem\particles_kernel_impl.cuh(506): warning : variable "Factor" was declared but never referenced
+  
+CUDACOMPILE : nvcc warning : The 'compute_35', 'compute_37', 'compute_50', 'sm_35', 'sm_37' and 'sm_50' architectures are deprecated, and may be removed in a future release (Use -Wno-deprecated-gpu-targets to suppress warning).
+  particlesystem_cuda.cu
+  render_copperBalls.cpp
+  render_mesh.cpp
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\renderer\render_mesh.h(91,1): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  particles.cpp
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\renderer\render_mesh.h(91,1): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particles.cpp(68,36): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particles.cpp(167,53): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particles.cpp(363,9): warning C4101: 'nbCubeX': unreferenced local variable
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particles.cpp(363,17): warning C4101: 'nbCubeZ': unreferenced local variable
+  particleSystem.cpp
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\renderer\render_mesh.h(91,1): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(90,27): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(202,17): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(203,17): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(393,12): warning C4101: 'dTriangles': unreferenced local variable
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(760,59): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(761,12): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(761,12): message : consider using '%zd' in the format string
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(838,35): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(859,23): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(860,23): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(861,23): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(931,99): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(935,136): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(1004,107): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(1007,142): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(1059,51): warning C4018: '<': signed/unsigned mismatch
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\particleSystem\particleSystem.cpp(1071,55): warning C4018: '<': signed/unsigned mismatch
+  render_particles.cpp
+  shaders.cpp
+  triangle_mesh.cpp
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1378,39): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1378,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1382,50): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1382,39): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1382,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1386,61): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1386,50): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1386,39): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1386,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\ParticlesSimulation\mesh\triangle_mesh.cpp(38,67): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+  triangle_mesh_model.cpp
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1378,39): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1378,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1382,50): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1382,39): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1382,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1386,61): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1386,50): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1386,39): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\cours\M1\stage\SimulationStage\includes\helper_math.h(1386,28): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 1461 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  ParticlesSimulation.vcxproj -> C:\cours\M1\stage\SimulationStage\x64\Release\ParticlesSimulation.exe

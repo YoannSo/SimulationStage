@@ -1,4 +1,4 @@
-Identity=particleSystem_cuda.cu
+Identity=particleSystem\particleSystem_cuda.cu
 AdditionalCompilerOptions=
 AdditionalCompilerOptions=
 AdditionalDependencies=

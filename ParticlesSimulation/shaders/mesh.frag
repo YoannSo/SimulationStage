@@ -11,7 +11,7 @@ void main()
 {
 	vec3 color=vec3(1.0,0.0,0.0);
 
-	vec3 lightDir =  vec3(0.0, 0.0, 0.0);
+	vec3 lightDir =  vec3(0.0, 0.0, 3.0);
 
 	vec3 normal=anAdaptedVertexNormal;
 
