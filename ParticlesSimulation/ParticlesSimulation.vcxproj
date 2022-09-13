@@ -164,10 +164,7 @@
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <ClCompile Include="renderer\render_copperBalls.cpp" />
-=======
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     <ClCompile Include="renderer\render_mesh.cpp" />
     <ClCompile Include="particleSystem\particles.cpp" />
     <ClCompile Include="particleSystem\particleSystem.cpp" />
@@ -190,10 +187,7 @@
     <None Include="shaders\mesh.vert" />
   </ItemGroup>
   <ItemGroup>
-<<<<<<< HEAD
     <ClInclude Include="renderer\render_copperBalls.h" />
-=======
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     <ClInclude Include="renderer\render_mesh.h" />
     <ClInclude Include="utils\param.h" />
     <ClInclude Include="utils\paramgl.h" />

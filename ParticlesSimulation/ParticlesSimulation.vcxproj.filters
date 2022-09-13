@@ -37,12 +37,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="mesh\triangle_mesh_model.cpp">
-<<<<<<< HEAD
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="renderer\render_copperBalls.cpp">
-=======
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -85,12 +82,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils\read_file.h">
-<<<<<<< HEAD
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="renderer\render_copperBalls.h">
-=======
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -54,10 +54,7 @@
 #include "particleSystem.h"
 #include "../renderer/render_particles.h"
 #include "../renderer/render_mesh.h"
-<<<<<<< HEAD
 #include "../renderer/render_copperBalls.h"
-=======
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
 #include "paramgl.h"
 
@@ -65,11 +62,7 @@
 #define THRESHOLD         0.30f
 
 #define GRID_SIZE       128
-<<<<<<< HEAD
 #define NUM_PARTICLES  1000000
-=======
-#define NUM_PARTICLES  500000
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
 std::string MESH_NAME = "KPP_Prop_AHPCS_dilue_TT_1000_DECIMATED_FULL.obj";
 float pourcentageCopperBall = 0.005;
@@ -96,10 +89,7 @@ bool displaySliders = false;
 bool wireframe = false;
 bool demoMode = false;
 bool launchSimulation = false;
-<<<<<<< HEAD
 bool displayCopperBalls = true;
-=======
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 int idleCounter = 0;
 int demoCounter = 0;
 const int idleDelay = 2000;
@@ -339,27 +329,12 @@ void display()
    
     glm::vec4 camPos = glm::vec4(camera_trans[0], camera_trans[1]+3.f, camera_trans[2],1.f);
     glm::mat4 identity = glm::mat4(1.f);
-<<<<<<< HEAD
     glm::mat4 modelMatrix = glm::rotate(identity,camera_rot[0],glm::vec3(1.f,0.f,0.f));
     modelMatrix = glm::rotate(modelMatrix, camera_rot[1], glm::vec3(0.f, 1.f, 0.f));
     modelMatrix = glm::rotate(modelMatrix, camera_rot[2], glm::vec3(0.f, 0.f, 1.f));
 
     glm::mat4 transfoMatrix = glm::mat4(1.f);
     transfoMatrix = glm::translate(transfoMatrix, glm::vec3(meshTranslateX, meshTranslateY, meshTranslateZ));
-=======
-    glm::mat4 test1 = glm::rotate(identity,camera_rot[0],glm::vec3(1.f,0.f,0.f));
-     test1 = glm::rotate(test1, camera_rot[1], glm::vec3(0.f, 1.f, 0.f));
-     test1 = glm::rotate(test1, camera_rot[2], glm::vec3(0.f, 0.f, 1.f));
-
-     //glm::rotate(camPos, test1);
-     //camPos* test1;
-    //printf("Trans: %f %f %f \n", camera_trans[0], camera_trans[1], camera_trans[2]);
-    //std::cout << glm::to_string(test1) << std::endl;
-   // printf("ROT: %f %f %f \n", camera_rot[0], camera_rot[1], camera_rot[2]);
-    //printf("POS:f %f %f %f %f %f %f\n", modelView[0], modelView[1], modelView[2], modelView[3], modelView[4], modelView[5], modelView[6]);
-     glm::mat4 transfoMatrix = glm::mat4(1.f);
-     transfoMatrix = glm::translate(transfoMatrix, glm::vec3(meshTranslateX, meshTranslateY, meshTranslateZ));
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     meshRenderer->setMVMatrix(modelView);
     glm::mat4 transformation = glm::scale(meshRenderer->getTransformation(), glm::vec3(0.1f));
     meshRenderer->setTransformation(transfoMatrix);
@@ -386,24 +361,11 @@ void display()
     int nbTrianglePoints = psystem->getNbTrianglePoints();
     float3* trianglePoints=psystem->getTrianglesPoints();
     int nbCubeX,nbCubeZ;
-<<<<<<< HEAD
      float3 sizeWorld = make_float3(2.f,2.f,2.f);
     float3 cellSize = make_float3(sizeWorld.x / GRID_SIZE, sizeWorld.y / GRID_SIZE, sizeWorld.z / GRID_SIZE);
    
     float3 initialPos = make_float3(1.f - 0.5f * cellSize.x, 1.f - 0.5f * cellSize.y, 1.f - 0.5f * cellSize.z);
       /*  glPushMatrix(); afficahge de la grille
-=======
-  //  float3 min = psystem->getMeshRenderer()->getModel().getAABBMin();
-    //float3 max= psystem->getMeshRenderer()->getModel().getAABBMax();
-    //float3 sizeWorld = make_float3(max.x-min.x, max.y - min.y, max.z - min.z);
-     float3 sizeWorld = make_float3(2.f,2.f,2.f);
-    float3 cellSize = make_float3(sizeWorld.x / GRID_SIZE, sizeWorld.y / GRID_SIZE, sizeWorld.z / GRID_SIZE);
-    //nbCubeX = 1+sizeWorld.x / cellSize;
-    //nbCubeZ = 1+sizeWorld.z / cellSize;
-    //printf("Je dois afficher %dx%dx%d cellules soit :%d cellules\n", nbCubeX, GRID_SIZE, nbCubeZ, nbCubeX* nbCubeZ* GRID_SIZE);
-    float3 initialPos = make_float3(1.f - 0.5f * cellSize.x, 1.f - 0.5f * cellSize.y, 1.f - 0.5f * cellSize.z);
-      /*  glPushMatrix();
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
         glTranslatef(initialPos.x, initialPos.y, initialPos.z);
         for (float i = 0.f; i < GRID_SIZE; i++) {
             glPushMatrix(); 
@@ -425,24 +387,11 @@ void display()
         }
         glPopMatrix();*/
 
-<<<<<<< HEAD
   
     float* copperBallsPos = psystem->getCopperBallPos();
     int numberOfBalls = psystem->getNumCopperBalls();
   
    
-=======
-   // }
-   /* for (int i = 0; i < nbTrianglePoints * 3; i++) {
-        glBegin(GL_TRIANGLES);
-        glColor3f(0.1, 0.2, 0.3);
-        glVertex3f(trianglePoints[i].x, trianglePoints[i].y, trianglePoints[i].z);
-        glVertex3f(trianglePoints[i+1].x, trianglePoints[i+1].y, trianglePoints[i+1].z);
-        glVertex3f(trianglePoints[i+2].x, trianglePoints[i+2].y, trianglePoints[i+2].z);
-        glEnd();
-        i += 2;
-    }*/
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     if (meshRenderer && displayEnabled)
     {
         meshRenderer->display(meshDisplayMode);
@@ -741,36 +690,21 @@ void key(unsigned char key, int /*x*/, int /*y*/)
     case 'r':
         launchSimulation = false;
         psystem->getCopperBallResult();
-<<<<<<< HEAD
         copperBallsRenderer->setColor(psystem->getCopperBallsColor());
         psystem->reset();
         psystem->reset(ParticleSystem::CONFIG_TOP);
         //displayEnabled = !displayEnabled;
-=======
-        psystem->reset();
-        psystem->reset(ParticleSystem::CONFIG_TOP);
-       //displayEnabled = !displayEnabled;
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
         break;
     case 'f':
         psystem->launchForce();
         break;
 
     case 'l':
-<<<<<<< HEAD
         psystem->clearBuffers(meshTranslateX,meshTranslateY,meshTranslateZ);
         launchSimulation = true;
         break;
 
   
-=======
-        psystem->test(meshTranslateX,meshTranslateY,meshTranslateZ);
-        launchSimulation = true;
-        break;
-
-    case 'c':
-        break;
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     case '"':
         addSphere();

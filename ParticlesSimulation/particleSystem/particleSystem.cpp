@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
 * Copyright 1993-2015 NVIDIA Corporation.  All rights reserved.
 *
@@ -11,20 +10,6 @@
 */
 
 // OpenGL Graphics includes
-=======
-    /*
- * Copyright 1993-2015 NVIDIA Corporation.  All rights reserved.
- *
- * Please refer to the NVIDIA end user license agreement (EULA) associated
- * with this source code for terms and conditions that govern your use of
- * this software. Any use, reproduction, disclosure, or distribution of
- * this software and related documentation outside the terms of the EULA
- * is strictly prohibited.
- *
- */
-
- // OpenGL Graphics includes
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 #define HELPERGL_EXTERN_GL_FUNC_IMPLEMENTATION
 #include <helper_gl.h>
 #pragma comment(lib, "glew32.lib")
@@ -53,11 +38,7 @@
 #include <iostream>
 #include <string>
 int compteurCycle = 0;
-<<<<<<< HEAD
 ParticleSystem::ParticleSystem(uint numParticles, uint3 gridSize, bool bUseOpenGL, std::string p_meshName,float p_pourcentageCopperBall) :
-=======
-ParticleSystem::ParticleSystem(uint numParticles, uint3 gridSize, bool bUseOpenGL) :
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     m_bInitialized(false),
     m_bUseOpenGL(bUseOpenGL),
     m_numParticles(numParticles),
@@ -74,11 +55,7 @@ ParticleSystem::ParticleSystem(uint numParticles, uint3 gridSize, bool bUseOpenG
     m_solverIterations(1)
 {
     m_numGridCells = m_gridSize.x * m_gridSize.y * m_gridSize.z;
-<<<<<<< HEAD
     float3 worldSize = make_float3(2.0f, 2.0f, 2.f);
-=======
-        float3 worldSize = make_float3(2.0f, 2.0f, 2.f);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     m_gridSortBits = 18;    // increase this for larger grids
 
@@ -87,19 +64,11 @@ ParticleSystem::ParticleSystem(uint numParticles, uint3 gridSize, bool bUseOpenG
     m_params.numCells = m_numGridCells;
     m_params.numBodies = m_numParticles;
 
-<<<<<<< HEAD
     m_params.particleRadius = 1.0f / 192.0f;
-=======
-    m_params.particleRadius = 1.0f /192.0f; // TODO: la particule du coin qui passe => chelou ?
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     m_params.colliderPos = make_float3(0.f, 0.f, 0.f);
     m_params.p0 = make_float3(0.f, 0.f, 0.f);
     m_params.p1 = make_float3(0.f, 0.f, 0.f);
     m_params.p2 = make_float3(0.f, 0.f, 0.f);
-<<<<<<< HEAD
-=======
-    m_params.numberOfBalls = 0;
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     m_params.colliderRadius = 0.2f;
     m_params.nbCycles = 0;
@@ -107,10 +76,6 @@ ParticleSystem::ParticleSystem(uint numParticles, uint3 gridSize, bool bUseOpenG
     m_params.triangleCellSize = make_float3(worldSize.x / m_gridSize.x, worldSize.y / m_gridSize.y, worldSize.z / m_gridSize.z);
     float cellSize = m_params.particleRadius * 2.0f;  // cell size equal to particle diameter
     m_params.particuleCellSize = make_float3(cellSize, cellSize, cellSize);
-<<<<<<< HEAD
-=======
-    printf("%f %f %f nbGrille \n", m_params.triangleCellSize.x, m_params.triangleCellSize.y, m_params.triangleCellSize.z);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     m_params.spring = 0.5f;
     m_params.damping = 0.02f;
     m_params.shear = 0.1f;
@@ -119,12 +84,8 @@ ParticleSystem::ParticleSystem(uint numParticles, uint3 gridSize, bool bUseOpenG
     m_params.maxBallPerCell = _maxCopperBallsPerCell;
     m_params.gravity = make_float3(0.0f, -0.0003f, 0.0f);
     m_params.globalDamping = 1.0f;
-<<<<<<< HEAD
     m_meshName = p_meshName;
     m_pourcentageCopperBall = p_pourcentageCopperBall;
-=======
-
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     _initialize(numParticles);
     m_params.nbVertices = _nbVertices;
     m_params.maxTrianglePerbox = _maxTrianglePerBox;
@@ -137,7 +98,6 @@ ParticleSystem::~ParticleSystem()
     m_numParticles = 0;
 }
 
-<<<<<<< HEAD
 float* ParticleSystem::getCopperBallsColor()
 {
     float* color = new float[nbTriangleSelected * 4];
@@ -175,8 +135,6 @@ float* ParticleSystem::getCopperBallsColor()
     return color;
 }
 
-=======
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 uint
 ParticleSystem::createVBO(uint size)
 {
@@ -213,50 +171,19 @@ void colorRamp(float t, float* r)
     r[0] = lerp(c[i][0], c[i + 1][0], u);
     r[1] = lerp(c[i][1], c[i + 1][1], u);
     r[2] = lerp(c[i][2], c[i + 1][2], u);
-<<<<<<< HEAD
 
 }
-=======
- 
-}
-// TODO : les grilles on l'aire bien remplie ? Il faut ensuite ajouter un test, pour tester les boules de cuivre si on toche on incremente un tab, et on met -1 dans un autre tab pour dire cettre particule a deja interagit avec cette boule
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 void
 ParticleSystem::_initialize(int numParticles)
 {
     assert(!m_bInitialized);
 
     m_numParticles = numParticles;
-<<<<<<< HEAD
 
     _meshRenderer = new MeshRenderer("Ceramique", "../data/objets/"+m_meshName);
 
     _sizeIndices = _meshRenderer->getEboSize();
     _sizeTriangles = (int)_meshRenderer->getEboSize() / 3;
-=======
-    
-    _meshRenderer = new MeshRenderer("test", "../data/copper_balls/menger.obj");
-   //_meshRenderer = new MeshRenderer("test", "../data/avion_papier/avion_papier.obj");
-    std::ifstream monFlux("../data/copper_balls/menger_d10.txt");
-    if (monFlux) {
-        std::string ligne; //Une variable pour stocker les lignes lues
-        std::getline(monFlux, ligne); // enlever premiere ligne
-        float number;
-        while (monFlux >> ligne) //on lit mot par mot
-        {
-           m_hCopperBalls.emplace_back(std::stof(ligne));
-           m_params.numberOfBalls++;
-        }
-    }
-    else
-    {
-        std::cout << "ERREUR: Impossible d'ouvrir le fichier en lecture." << std::endl;
-    }
-    m_params.numberOfBalls = m_params.numberOfBalls / 4;
-    _sizeIndices = _meshRenderer->getEboSize();
-    _sizeTriangles = (int)_meshRenderer->getEboSize()/3;
-    printf(" j'ai: %d \n", m_params.numberOfBalls);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     // allocate host storage
     m_hPos = new float[m_numParticles * 4];
     m_hVel = new float[m_numParticles * 4];
@@ -269,37 +196,23 @@ ParticleSystem::_initialize(int numParticles)
     float3 min = model.getAABBMin();
     float3 max = model.getAABBMax();
     m_triangleGridWorldSize = make_float3(max.x - min.x, max.y - min.y, max.z - min.z);
-<<<<<<< HEAD
     m_triangleGridWorldOrigin = make_float3(-1.0f, -1.0f, -1.0f);
     m_cellSize = m_triangleGridWorldSize.y / m_gridSize.y;
-=======
-    //m_triangleGridWorldOrigin = make_float3((max.x + min.x) * 0.5f, (max.y + min.y) * 0.5f, (max.z + min.z) * 0.5f);
-    m_triangleGridWorldOrigin = make_float3(-1.0f, -1.0f, -1.0f);
-     m_cellSize = m_triangleGridWorldSize.y / m_gridSize.y;
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     nbCellX = 1 + m_triangleGridWorldSize.x / m_cellSize;
     nbCellZ = 1 + m_triangleGridWorldSize.z / m_cellSize;
 
     m_gridTriangleSize = make_uint3(nbCellX, m_gridSize.y, nbCellZ);
     m_numTriangleGridCells = m_gridTriangleSize.x * m_gridTriangleSize.y * m_gridTriangleSize.z;
-<<<<<<< HEAD
 
  
     m_params.numberOfBalls = nbTriangleSelected;
-=======
-    printf("Je dois afficher %dx%dx%d cellules soit :%d cellules\n", m_gridTriangleSize.x, m_gridTriangleSize.y, m_gridTriangleSize.z, m_numTriangleGridCells);
-    printf("Ma grille fait x:%f y:%f z:%f  et son centre est: x:%f y:%f z:%f \n", m_triangleGridWorldSize.x, m_triangleGridWorldSize.y, m_triangleGridWorldSize.z, m_triangleGridWorldOrigin.x, m_triangleGridWorldOrigin.y, m_triangleGridWorldOrigin.z);
-
-
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     _nbTriangles = model._nbTriangles;
     _nbVertices = model._nbVertices;
     m_hTriangles = new float[_nbVertices * 4];
     m_hGridTrianglesIndex = new int[m_numGridCells * _maxTrianglePerBox];
     m_hGridCopperBalls = new int[m_numGridCells * _maxCopperBallsPerCell];
-<<<<<<< HEAD
     m_hGridTrianglesHash = new int[m_numGridCells * 2];
     m_hGridCopperBallsHash = new int[m_numGridCells * 2];
 
@@ -313,26 +226,10 @@ ParticleSystem::_initialize(int numParticles)
 
     memset(m_hIndices, 0, _sizeIndices * sizeof(unsigned int));
     memset(m_hTriangles, 0, _nbVertices * 4 * sizeof(float));
-=======
-    m_hGridTrianglesHash = new int[m_numGridCells];
-    m_hNumInteraction = new uint[m_params.numberOfBalls];
-
-
-    m_params.nbIndices = _sizeIndices;
-   // _maxTrianglePerBox = _nbTriangles;
-
-    memset(m_hPos, 0, m_numParticles * 4 * sizeof(float));
-    memset(m_hVel, 0, m_numParticles * 4 * sizeof(float));
-
-    memset(m_hIndices, 0, _sizeIndices  * sizeof(unsigned int));
-    memset(m_hTriangles, 0, _nbVertices * 4 * sizeof(float));
-    printf("num: %d max %d \n", m_numGridCells, _maxTrianglePerBox);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     memset(m_hGridTrianglesIndex, -1, m_numGridCells * sizeof(int) * _maxTrianglePerBox);
     memset(m_hGridCopperBalls, -1, m_numGridCells * sizeof(int) * _maxCopperBallsPerCell);
 
-<<<<<<< HEAD
     memset(m_hGridTrianglesHash, -1, m_numGridCells * 2 * sizeof(int));
 
     m_hCellStart = new uint[m_numGridCells];
@@ -349,21 +246,6 @@ ParticleSystem::_initialize(int numParticles)
     unsigned int memSize = sizeof(float) * 4 * m_numParticles;
     unsigned int testMem = sizeof(float) * 4 * _nbVertices;
     unsigned int indicesMem = sizeof(unsigned int) * _sizeIndices;
-=======
-    memset(m_hGridTrianglesHash, -1, m_numGridCells * sizeof(int));
-
-    m_hCellStart = new uint[m_numGridCells];
-    memset(m_hCellStart, 0, m_numGridCells * sizeof(uint));
-        
-    m_hCellEnd = new uint[m_numGridCells];
-    memset(m_hCellEnd, 0, m_numGridCells * sizeof(uint));
-
-    memset(m_hNumInteraction, 0, m_params.numberOfBalls * sizeof(uint));
-    // allocate GPU data
-    unsigned int memSize = sizeof(float) * 4 * m_numParticles;
-    unsigned int testMem= sizeof(float) * 4 * _nbVertices;
-    unsigned int indicesMem = sizeof(unsigned int)  * _sizeIndices;
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     if (m_bUseOpenGL)
     {
@@ -386,7 +268,6 @@ ParticleSystem::_initialize(int numParticles)
     allocateArray((void**)&m_dSortedPos, memSize);
     allocateArray((void**)&m_dSortedVel, memSize);
 
-<<<<<<< HEAD
 
 
     allocateArray((void**)&m_dGridParticleHash, m_numParticles * sizeof(uint));
@@ -394,19 +275,6 @@ ParticleSystem::_initialize(int numParticles)
     allocateArray((void**)&m_dGridParticleIndex, m_numParticles * sizeof(uint));
 
     allocateArray((void**)&m_dGridTrianglesHash, m_numGridCells * 2 * sizeof(int));
-=======
-    allocateArray((void**)&m_dCopperBalls, m_params.numberOfBalls*4*sizeof(float));
-
-
-    allocateArray((void**)&m_dGridParticleHash, m_numParticles * sizeof(uint));
-   // allocateArray((void**)&m_dGridTrianglesHash, _sizeIndices * sizeof(uint)*3);
-
-    allocateArray((void**)&m_dGridParticleIndex, m_numParticles * sizeof(uint));
-    allocateArray((void**)&m_dGridTrianglesIndex, m_numGridCells*_maxTrianglePerBox*sizeof(int));
-    allocateArray((void**)&m_dGridCopperBalls, m_numGridCells* _maxCopperBallsPerCell * sizeof(int));
-
-    allocateArray((void**)&m_dGridTrianglesHash, m_numGridCells * sizeof(int));
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     allocateArray((void**)&m_dCellStart, m_numGridCells * sizeof(uint));
     allocateArray((void**)&m_dCellEnd, m_numGridCells * sizeof(uint));
@@ -414,13 +282,8 @@ ParticleSystem::_initialize(int numParticles)
     allocateArray((void**)&m_dCellStartTriangle, m_numGridCells * sizeof(uint));
     allocateArray((void**)&m_dCellEndTriangle, m_numGridCells * sizeof(uint));
 
-<<<<<<< HEAD
 
     allocateArray((void**)&m_dGridCopperBallsHash, m_numGridCells * 2 * sizeof(int));
-=======
-    allocateArray((void**)&m_dNumInteraction, m_params.numberOfBalls * sizeof(uint));
-    setArray(COPPERCPY, m_hCopperBalls.data(), 0, m_params.numberOfBalls * 4);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     if (m_bUseOpenGL)
     {
         m_colorVBO = createVBO(m_numParticles * 4 * sizeof(float));
@@ -455,10 +318,6 @@ ParticleSystem::_initialize(int numParticles)
     sdkCreateTimer(&m_timer);
 
     setParameters(&m_params);
-<<<<<<< HEAD
-=======
-    setCopperBallGrid();
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     m_bInitialized = true;
 }
 
@@ -476,15 +335,12 @@ ParticleSystem::_finalize()
     delete[] m_hGridTrianglesIndex;
     delete[] m_hGridTrianglesHash;
     delete[] m_hNumInteraction;
-<<<<<<< HEAD
     delete[] m_hGridCopperBallsHash;
     delete[] m_hCopperBall;
     m_hGridTrianglesAdaptedIndex.clear();
     m_hGridCopperBallsAdaptedIndex.clear();
     freeArray(m_dGridCopperBallsHash);
     freeArray(m_dGridTrianglesAdaptedIndex);
-=======
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     freeArray(m_dNumInteraction);
     freeArray(m_dCopperBalls);
     freeArray(m_dIndices);
@@ -495,10 +351,6 @@ ParticleSystem::_finalize()
     freeArray(m_dSortedVel);
     freeArray(m_dGridCopperBalls);
     freeArray(m_dGridParticleHash);
-<<<<<<< HEAD
-=======
-    freeArray(m_dGridTrianglesIndex);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     freeArray(m_dGridParticleIndex);
     freeArray(m_dCellStart);
     freeArray(m_dCellEnd);
@@ -549,16 +401,11 @@ ParticleSystem::update(float deltaTime)
         dPos = (float*)m_cudaPosVBO;
 
     }
-<<<<<<< HEAD
 
-=======
-   
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     // update constants
     setParameters(&m_params);
 
     // integrate
-<<<<<<< HEAD
     integrateSystem(
         dPos,
         m_dVel,
@@ -575,20 +422,6 @@ ParticleSystem::update(float deltaTime)
         m_dGridTrianglesAdaptedIndex
 
     );
-=======
-        integrateSystem(
-            dPos,
-            m_dVel,
-            m_dTriangles,
-            m_dIndices,
-            m_dCopperBalls,
-        deltaTime,
-        m_numParticles,
-            m_dGridTrianglesIndex,
-            m_dGridCopperBalls,
-            m_dNumInteraction
-            );
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     // calculate grid hash
     calcHash(
@@ -625,11 +458,7 @@ ParticleSystem::update(float deltaTime)
         m_dCellEnd,
         m_numParticles,
         m_numGridCells, this->m_params.inclinaison);
-<<<<<<< HEAD
     if (this->takeScreen && this->idScreenshot < 5 && this->m_params.nbCycles == 20 && compteurCycle % 2 == 0) {
-=======
-    if (this->takeScreen && this->idScreenshot < 5 && this->m_params.nbCycles == 20&& compteurCycle%2==0) {
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
         this->idScreenshot++;
         compteurCycle = 0;
     }
@@ -645,24 +474,14 @@ ParticleSystem::update(float deltaTime)
             m_dCellEnd,
             m_numParticles,
             m_numGridCells, this->m_params.inclinaison, this->m_params.pumpForce);
-<<<<<<< HEAD
 
     }
 
-=======
-        
-    }
-    
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     this->m_params.nbCycles++;
     // note: do unmap at end here to avoid unnecessary graphics/CUDA context switch
     if (m_bUseOpenGL)
     {
         unmapGLBufferObject(m_cuda_posvbo_resource);
-<<<<<<< HEAD
-=======
-      //  unmapGLBufferObject(m_cuda_trianglevbo_resource);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     }
 }
@@ -694,12 +513,7 @@ ParticleSystem::dumpGrid()
 void
 ParticleSystem::dumpGridTriangle()
 {
-<<<<<<< HEAD
 
-=======
-    // dump grid information
-   // copyArrayFromDevice(m_hCellStart, m_dGridTrianglesHash, 0, sizeof(uint) * m_numGridCells);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     copyArrayFromDevice(m_hCellEnd, m_dCellEnd, 0, sizeof(uint) * m_numGridCells);
     uint maxCellSize = 0;
 
@@ -755,11 +569,7 @@ ParticleSystem::getArray(ParticleArray array)
         hdata = m_hVel;
         ddata = m_dVel;
         break;
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     }
 
@@ -796,7 +606,6 @@ ParticleSystem::setArray(ParticleArray array, const float* data, int start, int 
         copyArrayToDevice(m_dVel, data, start * 4 * sizeof(float), count * 4 * sizeof(float));
         break;
     case TRIANGLECPY:
-<<<<<<< HEAD
         copyArrayToDevice(m_dTriangles, data, start * 4 * sizeof(float), _nbVertices * 4 * sizeof(float));
         break;
     case INDICES:
@@ -804,29 +613,6 @@ ParticleSystem::setArray(ParticleArray array, const float* data, int start, int 
         break;
     case COPPERCPY:
         copyArrayToDevice(m_dCopperBalls, data, start * sizeof(float), count * sizeof(float));
-=======
-        //TriangleMeshModel currentModel = meshRenderer->getModel();
-       // int nbPoints = currentModel._nbVertices;
-      //  if (m_bUseOpenGL)
-        //{
-          //  unregisterGLBufferObject(m_cuda_trianglevbo_resource);
-            //glBindBuffer(GL_ARRAY_BUFFER, m_triangleVBO);
-            //glBufferSubData(GL_ARRAY_BUFFER, start * 4 * sizeof(float), _nbVertices * 4 * sizeof(float), data);
-            //glBindBuffer(GL_ARRAY_BUFFER, 0);
-            //registerGLBufferObject(m_triangleVBO, &m_cuda_trianglevbo_resource);
-        //}
-        //else
-        //{
-            copyArrayToDevice(m_dTriangles, data, start * 4 * sizeof(float), _nbVertices * 4 * sizeof(float));
-       // }
-        //copyArrayToDevice(m_dTestTriangle, data, start * sizeof(float), _nbVertices * sizeof(float));
-        break;
-    case INDICES:
-        copyArrayToDevice(m_dIndices, data, start  * sizeof(unsigned int), _sizeIndices * sizeof(unsigned int));
-        break;
-    case COPPERCPY:
-        copyArrayToDevice(m_dCopperBalls, data, start * sizeof(float),count*sizeof(float));
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
         break;
     }
 }
@@ -870,17 +656,10 @@ ParticleSystem::initGridTop(uint* size, float spacing, float jitter, uint numPar
 {
     srand(1973);
 
-<<<<<<< HEAD
     for (uint z = 0; z < size[2]; z++)
 
     {
         for (uint y = 0; y < size[1]; y++)
-=======
-                for (uint z = 0; z < size[2]; z++)
-
-    {
-                    for (uint y = 0; y < size[1]; y++)
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
         {
             for (uint x = 0; x < size[0]; x++)
@@ -889,11 +668,7 @@ ParticleSystem::initGridTop(uint* size, float spacing, float jitter, uint numPar
                 if (i < numParticles)
                 {
                     m_hPos[i * 4] = (spacing * x) + m_params.particleRadius - 1.0f + (frand() * 2.0f - 1.0f) * jitter;
-<<<<<<< HEAD
                     m_hPos[i * 4 + 1] = (spacing * y) + m_params.particleRadius + 1.5f - spacing + (frand() * 2.0f - 1.0f) * jitter;
-=======
-                    m_hPos[i * 4 + 1] = (spacing * y) + m_params.particleRadius +1.5f-spacing + (frand() * 2.0f - 1.0f) * jitter;
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
                     m_hPos[i * 4 + 2] = (spacing * z) + m_params.particleRadius - 1.0f + (frand() * 2.0f - 1.0f) * jitter;
                     m_hPos[i * 4 + 3] = 1.0f;
 
@@ -907,7 +682,6 @@ ParticleSystem::initGridTop(uint* size, float spacing, float jitter, uint numPar
     }
 }
 
-<<<<<<< HEAD
 void ParticleSystem::setAllTriangleBuffers(float transX, float transY, float transZ) {
 
     TriangleMeshModel currentModel = _meshRenderer->getModel();
@@ -916,19 +690,6 @@ void ParticleSystem::setAllTriangleBuffers(float transX, float transY, float tra
         m_hTriangles[i] = currentModel._meshes[0]._vertices[j]._position.x + transX;
         m_hTriangles[i + 1] = currentModel._meshes[0]._vertices[j]._position.y + transY;
         m_hTriangles[i + 2] = currentModel._meshes[0]._vertices[j]._position.z + transZ;
-=======
-void ParticleSystem::setAllTriangleBuffers(float transX,float transY,float transZ) {
-
-    TriangleMeshModel currentModel = _meshRenderer->getModel();
-    //int nbTriangles = currentModel._nbTriangles;
-    //int nbPoints = currentModel._nbVertices;
-    printf("%d %d \n", _nbVertices, _nbTriangles);
-    int j = 0;
-    for (int i = 0; i < _nbVertices * 4; i += 4) {
-        m_hTriangles[i] = currentModel._meshes[0]._vertices[j]._position.x+ transX;
-        m_hTriangles[i + 1] = currentModel._meshes[0]._vertices[j]._position.y+ transY;
-        m_hTriangles[i + 2] = currentModel._meshes[0]._vertices[j]._position.z+ transZ;
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
         m_hTriangles[i + 3] = 1.f;
         j++;
     }
@@ -939,7 +700,6 @@ void ParticleSystem::setAllTriangleBuffers(float transX,float transY,float trans
 
     setArray(TRIANGLECPY, m_hTriangles, 0, _nbVertices);
     copyArrayToDevice(m_dIndices, m_hIndices, 0 * sizeof(unsigned int), _sizeIndices * sizeof(unsigned int));
-<<<<<<< HEAD
 
     setTriangleGrid();
 
@@ -950,28 +710,12 @@ void ParticleSystem::setAllTriangleBuffers(float transX,float transY,float trans
 void ParticleSystem::setAllCopperBallBuffers(float transX, float transY, float transZ) {
 
     setCopperBallGrid();
-=======
-    // calcTriangleGrid(m_dGridTrianglesIndex, m_dTriangles,
-      //   _nbTriangles);
-    setTriangleGrid();
-    //sortTriangles(m_dGridTrianglesHash, m_dGridTrianglesIndex, _sizeIndices);
-   /*reorderDataAndFindCellStartTriangle(
-        m_dCellStartTriangle,
-        m_dCellEndTriangle,
-        m_dSortedTriangles,
-        m_dGridTrianglesHash,
-        m_dGridTrianglesIndex,
-        m_dTriangles,
-        _sizeIndices,
-        m_numGridCells);*/
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 }
 void ParticleSystem::reset()
 {
     delete[] m_hTriangles;
     delete[] m_hGridTrianglesIndex;
     delete[] m_hGridTrianglesHash;
-<<<<<<< HEAD
 
     m_hIdTriangleInSimulation.clear();
     m_hGridTrianglesAdaptedIndex.clear();
@@ -979,20 +723,11 @@ void ParticleSystem::reset()
     freeArray(m_dGridTrianglesHash);
 
     freeArray(m_dTriangles);
-=======
-    delete[]m_hGridCopperBalls;
-    freeArray(m_dGridCopperBalls);
-    freeArray(m_dTriangles);
-    freeArray(m_dGridTrianglesHash);
-    freeArray(m_dGridTrianglesIndex);
-    m_hGridCopperBalls = new int[m_numGridCells * _maxCopperBallsPerCell];
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
 
 
     m_hTriangles = new float[_nbVertices * 4];
     m_hGridTrianglesIndex = new int[m_numGridCells * _maxTrianglePerBox];
-<<<<<<< HEAD
     m_hGridTrianglesHash = new int[m_numGridCells * 2];
 
     memset(m_hGridTrianglesIndex, -1, m_numGridCells * sizeof(int) * _maxTrianglePerBox);
@@ -1058,27 +793,6 @@ void ParticleSystem::clearBuffers(float x, float y, float z)
     copyArrayToDevice(m_dCopperBalls, m_hBalls, 0, nbTriangleSelected * 4 * sizeof(float));
 
     setAllCopperBallBuffers(x, y, z);
-=======
-    m_hGridTrianglesHash = new int[m_numGridCells];
-
-
-    memset(m_hGridTrianglesIndex, -1, m_numGridCells * sizeof(int) * _maxTrianglePerBox);
-    memset(m_hGridTrianglesHash, -1, m_numGridCells * sizeof(int));
-    memset(m_hTriangles, 0, _nbVertices * 4 * sizeof(float));
-    memset(m_hGridCopperBalls, -1, m_numGridCells * sizeof(int) * _maxCopperBallsPerCell);
-
-    allocateArray((void**)&m_dGridTrianglesIndex, m_numGridCells * _maxTrianglePerBox * sizeof(int));
-    allocateArray((void**)&m_dGridCopperBalls, m_numGridCells * _maxCopperBallsPerCell * sizeof(int));
-
-    allocateArray((void**)&m_dGridTrianglesHash, m_numGridCells * sizeof(int));
-    allocateArray((void**)&m_dTriangles, sizeof(float) * 4 * _nbVertices);
-}
-void ParticleSystem::test(float x,float y,float z)
-{
-    setAllTriangleBuffers(x,y,z);
-
-   // printf(" %f %f %f \n", m_hTriangles[0]+x, m_hTriangles[1]+y,m_hTriangles[2]+z);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 }
 void
 ParticleSystem::reset(ParticleConfig config)
@@ -1127,22 +841,12 @@ ParticleSystem::reset(ParticleConfig config)
         gridSize[0] = nbParticlesMaxPerLine;
         int nbProf = nbParticlesMaxPerLine;
         gridSize[2] = nbParticlesMaxPerLine;
-<<<<<<< HEAD
         gridSize[1] =   m_numParticles / (nbProf * nbParticlesMaxPerLine) + 1;//100.f
         initGridTop(gridSize, spacing, jitter, m_numParticles);
 
 
     }
                    break;
-=======
-        printf("prof %d %d %d\n", nbProf, nbParticlesMaxPerLine);
-        gridSize[1] =  60.f; // m_numParticles / (nbProf * nbParticlesMaxPerLine) + 1;
-        initGridTop(gridSize, spacing, jitter, m_numParticles);
-
-        
-    }
-    break;
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     }
     setArray(POSITION, m_hPos, 0, m_numParticles);
     setArray(VELOCITY, m_hVel, 0, m_numParticles);
@@ -1164,23 +868,15 @@ uint ParticleSystem::calcGridHash(int3 gridPos)
     gridPos.x = gridPos.x & (m_params.gridSize.x - 1);  // wrap grid, assumes size is power of 2
     gridPos.y = gridPos.y & (m_params.gridSize.y - 1);
     gridPos.z = gridPos.z & (m_params.gridSize.z - 1);
-<<<<<<< HEAD
     return ((gridPos.z * m_params.gridSize.y) * m_params.gridSize.x) + (gridPos.y * m_params.gridSize.x) + gridPos.x;
 }
 void ParticleSystem::copyToAdaptedVector(int debut, int fin, int nbTriangle) {
 
-=======
-    return ((gridPos.z * m_params.gridSize.y)* m_params.gridSize.x) + (gridPos.y* m_params.gridSize.x) + gridPos.x;
-}
-void ParticleSystem::copyToAdaptedVector( int debut, int fin,int nbTriangle) {
-    
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     m_hGridTrianglesAdaptedIndex.emplace_back(nbTriangle);
     for (int i = debut; i < fin; i++) {
         m_hGridTrianglesAdaptedIndex.emplace_back(m_hGridTrianglesIndex[i]);
     }
 }
-<<<<<<< HEAD
 void ParticleSystem::getCopperBallResult() {
     copyArrayFromDevice(m_hNumInteraction, m_dNumInteraction, 0, nbTriangleSelected * sizeof(uint));
     for (int i =0 ; i < nbTriangleSelected; i++) {
@@ -1196,24 +892,11 @@ void ParticleSystem::setCopperBallGrid() {
 
     for (int i = 0; i < nbTriangleSelected; i++) {
         float3 pos = make_float3(m_hBalls[i * 4], m_hBalls[i * 4 + 1], m_hBalls[i * 4 + 2]);
-=======
-void ParticleSystem::getCopperBallResult () {
-    copyArrayFromDevice(m_hNumInteraction, m_dNumInteraction,0, m_params.numberOfBalls * sizeof(uint));
-    for (int i =0 ; i < m_params.numberOfBalls; i++) {
-        printf("Je suis la boule %d et i get hit %d times \n", i, m_hNumInteraction[i]);
-    }
-}
-void ParticleSystem::setCopperBallGrid() {
-  
-    for (int i = 0; i < m_params.numberOfBalls;i++) {
-        float3 pos = make_float3(m_hCopperBalls[i*4], m_hCopperBalls[i *4  + 1], m_hCopperBalls[i*4 + 2]);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
         int3 gridPos = calcGridPos(pos);
         uint hash = calcGridHash(gridPos);
         addIndicesInGrid(gridPos, hash, i, COPPER);
 
     }
-<<<<<<< HEAD
 
     int nbCourant = 0;
     int idVector = 0;
@@ -1261,22 +944,6 @@ void ParticleSystem::setTriangleGrid() {
         int idP0 = m_hIndices[i] * 4;
         int idP1 = m_hIndices[i + 1] * 4;
         int idP2 = m_hIndices[i + 2] * 4;
-=======
-    for (int i = 0; i < m_numGridCells * _maxCopperBallsPerCell; i++) {
-        //printf(" dans %d j'ai %d \n", i, m_hGridCopperBalls[i]);
-    }
-    copyArrayToDevice(m_dGridCopperBalls, m_hGridCopperBalls, 0, m_numGridCells * _maxCopperBallsPerCell * sizeof(int));
-
-    
-}
-void ParticleSystem::setTriangleGrid() {
-    int sizeOfTab = _maxTrianglePerBox * m_numGridCells;
-    printf("%d \n", _sizeIndices);
-    for (int i = 0; i < _sizeIndices; i+=3) {
-        int idP0 =m_hIndices[i]*4;
-        int idP1 = m_hIndices[i+1]*4;
-        int idP2 = m_hIndices[i+2]*4;
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
         float3 p0 = make_float3(m_hTriangles[idP0], m_hTriangles[idP0 + 1], m_hTriangles[idP0 + 2]);
         float3 p1 = make_float3(m_hTriangles[idP1], m_hTriangles[idP1 + 1], m_hTriangles[idP1 + 2]);
@@ -1290,7 +957,6 @@ void ParticleSystem::setTriangleGrid() {
         uint hash1 = calcGridHash(gridPos1);
         uint hash2 = calcGridHash(gridPos2);
         uint hash3 = calcGridHash(gridPos3);
-<<<<<<< HEAD
 
         decomposerTriangleRec(p0, p1, p2, 0, i);
 
@@ -1344,86 +1010,6 @@ void ParticleSystem::setTriangleGrid() {
 }
 void ParticleSystem::decomposerTriangleRec(float3 p0, float3 p1, float3 p2, int nbSub, int idTriangle) {
 
-=======
-      //  printf("id:%d   -- %d %d %d \n", i, gridPos1.x, gridPos1.y, gridPos1.z);
-
-        // printf("je met %d dans %d %d et %d \n",i, hash1, hash2, hash3);
-       // printf(" %d %d %d -- %d %d %d -- %d %d %d -- %d %d %d\n", gridPos1.x, gridPos1.y, gridPos1.z, gridPos2.x, gridPos2.y, gridPos2.z, gridPos3.x, gridPos3.y, gridPos3.z,hash1,hash2,hash3);
-       decomposerTriangleRec(p0, p1, p2, 0, i);
-        /*bool needHash2 = false;
-        bool needHash3 = false;
-        if (hash1 != hash2)
-            needHash2 = true;
-        if (hash3 != hash1 && hash3 != hash2)
-            needHash3 = true;
-        for (int j = hash1 * _maxTrianglePerBox; j < hash1 * _maxTrianglePerBox + _maxTrianglePerBox; j++) {
-            if (m_hGridTrianglesIndex[j] == -1) {
-                m_hGridTrianglesIndex[j] = i;
-                break;
-            }
-        }
-        if (needHash2) {
-            for (int j = hash2 * _maxTrianglePerBox; j < hash2 * _maxTrianglePerBox + _maxTrianglePerBox; j++) {
-                if (m_hGridTrianglesIndex[j] == -1) {
-                    m_hGridTrianglesIndex[j] = i;
-                    break;
-                }
-            }
-        }
-        if (needHash3) {
-            for (int j = hash3 * _maxTrianglePerBox; j < hash3 * _maxTrianglePerBox + _maxTrianglePerBox; j++) {
-                if (m_hGridTrianglesIndex[j] == -1) {
-                    m_hGridTrianglesIndex[j] = i;
-                    break;
-                }
-            }
-        }*/
-       
-   }
-   /* int indiceInHash = 0;
-    int* test;
-    int debut; // c/c de debut a fin dans un nouveau tableu 
-    int nbTriangles;
-    for (int i = 0; i < m_numGridCells; i++) {
-        int debut = i;
-        int fin = i;
-        int compteurDeTriangle = 0;
-        for (int j = i; j < sizeOfTab; j++) {
-            if (m_hGridTrianglesIndex[j] == -1 || compteurDeTriangle == _maxTrianglePerBox ) {
-                fin = j-1;
-                break;
-            }
-            compteurDeTriangle++;
-        }
-        if (fin < debut) {
-           m_hGridTrianglesHash[i] = -1;
-        }
-        else {
-            m_hGridTrianglesHash[i]= m_hGridTrianglesAdaptedIndex.size();
-        }
-        nbTriangles = fin - debut +1;
-        // c/c debut a fin
-        copyToAdaptedVector(debut, fin, nbTriangles);
-        // je dois avoir indice triangle, un compteur de valeur. Je met le compteur dans index puis tous les indices de triangle. et dans hash l'indice de la case
-    }
-    for (int i = 0; i < m_numGridCells; i++) {
-        printf(" la case : %d a: %d \n", i, m_hGridTrianglesHash[i]);
-        int k = m_hGridTrianglesHash[i];
-        if (k != -1) {
-            int nb = m_hGridTrianglesAdaptedIndex.at(k);
-
-        }
-       // for (int j = k; j < nb + k; j++) {
-          //  printf(" j'ai en indice: %d\n",m_hGridTrianglesAdaptedIndex[j]);
-
-        //}
-    }*/
-    copyArrayToDevice(m_dGridTrianglesIndex, m_hGridTrianglesIndex, 0 , sizeOfTab * sizeof(int));
-
-}
-void ParticleSystem::decomposerTriangleRec(float3 p0, float3 p1, float3 p2, int nbSub,int idTriangle) {
-    
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     int3 gridPos1 = calcGridPos(p0);
     int3 gridPos2 = calcGridPos(p1);
     int3 gridPos3 = calcGridPos(p2);
@@ -1433,12 +1019,7 @@ void ParticleSystem::decomposerTriangleRec(float3 p0, float3 p1, float3 p2, int 
 
     if (hash1 == hash2 && hash1 == hash3)
     {
-<<<<<<< HEAD
         addIndicesInGrid(gridPos1, hash1, idTriangle, TRIANGLE);
-=======
-        // printf("p0: %d %d %d p1: %d %d %d p2: %d %d %d \n", gridPos1.x, gridPos1.y, gridPos1.z, gridPos2.x, gridPos2.y, gridPos2.z, gridPos3.x, gridPos3.y, gridPos3.z);
-        addIndicesInGrid(gridPos1,hash1, idTriangle,TRIANGLE);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
         return;
 
     }
@@ -1446,7 +1027,6 @@ void ParticleSystem::decomposerTriangleRec(float3 p0, float3 p1, float3 p2, int 
 
     if (nbSub == _nbTriangleSubMax)
     {
-<<<<<<< HEAD
 
         addIndicesInGrid(gridPos1, hash1, idTriangle, TRIANGLE);
         addIndicesInGrid(gridPos2, hash2, idTriangle, TRIANGLE);
@@ -1465,61 +1045,12 @@ void ParticleSystem::decomposerTriangleRec(float3 p0, float3 p1, float3 p2, int 
     }
     if (hash2 != hash3) {
         decomposerTriangleRec(p1, p2, baryCentre, nbSub + 1, idTriangle);
-=======
-        
-        /*if (hash1 == hash2 && hash1 == hash3)
-        {
-            addIndicesInGrid(hash1, idTriangle);
-        }
-        else if (hash1 != hash2 && hash1 != hash3 && hash2 == hash3) {
-            addIndicesInGrid(hash1, idTriangle);
-            addIndicesInGrid(hash2, idTriangle);
-        }*/
-      //  else if (hash1 != hash2 && hash1 != hash3 && hash2 != hash3) {
-            addIndicesInGrid(gridPos1,hash1, idTriangle,TRIANGLE);
-            addIndicesInGrid(gridPos2,hash2, idTriangle, TRIANGLE);
-            addIndicesInGrid(gridPos3,hash3, idTriangle, TRIANGLE);
-
-     //   }
-       /* else if (hash1 != hash3)
-        {
-            addIndicesInGrid(hash1, idTriangle);
-            addIndicesInGrid(hash3, idTriangle);
-
-        }
-        else if (hash1 != hash2)
-        {
-            addIndicesInGrid(hash1, idTriangle);
-            addIndicesInGrid(hash2, idTriangle);
-
-        }*/
-        return;
-
-    }
- 
-  
-    float3 baryCentre = make_float3((p0.x + p1.x + p2.x) / 3.f, (p0.y + p1.y + p2.y) / 3.f, (p0.z + p1.z + p2.z) / 3.f);
-    if (hash1 != hash2) {
-        decomposerTriangleRec(p0, p1, baryCentre, nbSub+1,idTriangle);
-    }
-    if (hash1 != hash3) {
-        decomposerTriangleRec(p0, p2, baryCentre, nbSub+1, idTriangle);
-
-    }
-    if (hash2 != hash3) {
-        decomposerTriangleRec(p1, p2, baryCentre, nbSub+1, idTriangle);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     }
 }
 
-<<<<<<< HEAD
 void ParticleSystem::addIndicesInGrid(int3 gridPos, uint hash, int id, GridType type) {
     if (gridPos.x < 0 || gridPos.y < 0 || gridPos.z < 0 || gridPos.x>128 || gridPos.y>128 || gridPos.z>128) {
-=======
-void ParticleSystem::addIndicesInGrid(int3 gridPos,uint hash,int id,GridType type) {
-    if (gridPos.x < 0 || gridPos.y < 0 || gridPos.z < 0 || gridPos.x>128|| gridPos.y>128|| gridPos.z>128) {
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
         return;
     }
     switch (type) {
@@ -1531,37 +1062,20 @@ void ParticleSystem::addIndicesInGrid(int3 gridPos,uint hash,int id,GridType typ
             }
             if (m_hGridTrianglesIndex[j] == -1) {
                 m_hGridTrianglesIndex[j] = id;
-<<<<<<< HEAD
                 m_hIdTriangleInSimulation.emplace_back(id);
-=======
-                // printf("je met %d dans %d  \n", idTriangle, hash);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
                 return;
             }
         }
         break;
     case COPPER:
         for (int j = hash * _maxCopperBallsPerCell; j < hash * _maxCopperBallsPerCell + _maxCopperBallsPerCell; j++) {
-<<<<<<< HEAD
             if (m_hGridCopperBalls[j] == -1) {
                 m_hGridCopperBalls[j] = id;
-=======
-            if (m_hGridCopperBalls[j] == id) {
-                return;
-            }
-            if (m_hGridCopperBalls[j] == -1) {
-                m_hGridCopperBalls[j] = id;
-                printf("je met %d dans %d  \n", id, hash);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
                 return;
             }
         }
         break;
     }
-<<<<<<< HEAD
-=======
-   
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
 }
 void

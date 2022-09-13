@@ -34,11 +34,7 @@ extern "C"
         unsigned int* indices,
         float* copperBalls,
         float deltaTime,
-<<<<<<< HEAD
         uint numParticles,int * gridCopperBalls,int* gridCopperBallHash,uint* numInteraction,int* gridHashTriangle,int* gridTriangleAdapted);
-=======
-        uint numParticles, int* gridTrianglesIndex,int * gridCopperBalls,uint* numInteraction);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     void calcHash(uint* gridParticleHash,
         uint* gridParticleIndex,
@@ -78,17 +74,6 @@ extern "C"
         float inclinaison,
         float pumpForce);
     void sortParticles(uint* dGridParticleHash, uint* dGridParticleIndex, uint numParticles);
-<<<<<<< HEAD
 
-=======
-    void reorderDataAndFindCellStartTriangle(uint* cellStart,
-        uint* cellEnd,
-        float* sortedTriangle,
-        uint* gridTriangleHash,
-        uint* gridTriangleIndex,
-        float* oldTriangle,
-        uint   numTriangles,
-        uint   numCells);
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
     void sortTriangles(uint* dGridTriangleHash, uint* dGridTriangleIndex, uint numTriangles);
 }

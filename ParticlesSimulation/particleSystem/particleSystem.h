@@ -20,11 +20,8 @@
 #include "vector_functions.h"
 #include "../renderer/render_particles.h"
 #include "../renderer/render_mesh.h"
-<<<<<<< HEAD
 #include "../renderer/render_CopperBalls.h"
 
-=======
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 #include "../mesh/triangle_mesh_model.h"
 
  // Particle system class
@@ -241,16 +238,11 @@ public:
     void copyToAdaptedVector(int debut, int fin, int nbTriangle);
     void reset();
     void setAllTriangleBuffers(float x, float y, float z);
-<<<<<<< HEAD
     void setAllCopperBallBuffers(float transX, float transY, float transZ);
     void clearBuffers(float X,float Y, float Z);
     void getCopperBallResult();
     float* getCopperBallPos();
     float* getCopperBallsColor();
-=======
-    void test(float X,float Y, float Z);
-    void getCopperBallResult();
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 protected: // methods
     ParticleSystem() {}
     uint createVBO(uint size);
@@ -292,7 +284,6 @@ protected: // data
     uint* m_dGridParticleHash; // grid hash value for each particle
     uint* m_dGridParticleIndex;// particle index for each particle
 
-<<<<<<< HEAD
     int* m_hGridTrianglesIndex;// particle index for each particle
 
     int* m_dGridTrianglesHash;// particle index for each particle
@@ -311,17 +302,6 @@ protected: // data
     int* m_dGridCopperBallsHash;
     int* m_hGridCopperBalls;
     uint _maxCopperBallsPerCell = 40;
-=======
-    int* m_dGridTrianglesIndex;// particle index for each particle
-    int* m_hGridTrianglesIndex;// particle index for each particle
-
-    std::vector<int> m_hGridTrianglesAdaptedIndex= std::vector<int>();// particle index for each particle
-
-    std::vector<float> m_hCopperBalls = std::vector<float>();// particle index for each particle
-    int* m_dGridCopperBalls;
-    int* m_hGridCopperBalls;
-    uint _maxCopperBallsPerCell=2;
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     uint* m_dNumInteraction;
     uint* m_hNumInteraction;
@@ -329,14 +309,8 @@ protected: // data
     float* m_dCopperBalls;
 
     int* m_dGridTrianglesAdaptedIndex;// particle index for each particle
-<<<<<<< HEAD
     std::string m_meshName;
   
-=======
-
-    int* m_dGridTrianglesHash;// particle index for each particle
-    int* m_hGridTrianglesHash;// particle index for each particle
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
    // uint* m_dGridTrianglesHash;// particle index for each particle
 
@@ -353,14 +327,11 @@ protected: // data
 
     float* m_cudaPosVBO;        // these are the CUDA deviceMem Pos
     float* m_cudaColorVBO;      // these are the CUDA deviceMem Color
-<<<<<<< HEAD
 
     float* m_cudaColorTriangleVBO;
     struct cudaGraphicsResource* m_cudeposvbo_resource;
     uint m_colorTriangleVBO;
 
-=======
->>>>>>> f77b5d5a58d4ac1b8aa7286792f06f1c8c2a9e60
 
     struct cudaGraphicsResource* m_cuda_posvbo_resource; // handles OpenGL-CUDA exchange
     struct cudaGraphicsResource* m_cuda_colorvbo_resource; // handles OpenGL-CUDA exchange
